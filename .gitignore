@@ -1,3 +1,6 @@
 .idea/
 venv/
 *.pyc
+notes
+sharefun/config.py
+sharefun/static/test-dist/*

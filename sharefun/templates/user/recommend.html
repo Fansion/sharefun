@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% from "macro/common.html" import field_errors, horizontal_field %}
+
+{% block page_title %}推荐
+{% endblock %}
+{% block page_id %}page-recommend
+{% endblock %}
+
+{% block body %}
+
+<form id="form-recommend" class="form-horizontal" method="POST" action="{{ url_for('user.recommend') }}">
+    <fieldset>
+        <legend>推荐作品</legend>
+        {{ form.csrf_token }}
+        {{ horizontal_field(form.cate_id, length=3) }}
+        {{ horizontal_field(form.title1, length=3) }}
+        {{ horizontal_field(form.title2, length=3) }}
+        {{ horizontal_field(form.title3, length=3) }}
+        {{ horizontal_field(form.title4, length=3) }}
+        {{ horizontal_field(form.title5, length=3) }}
+
+        <div class="form-group">
+            <div class="col-md-3 col-md-offset-2">
+                {% for message in get_flashed_messages() %}
+                    <div class="alert alert-warning">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                <input type="submit" value="提交" class="btn btn-sm btn-primary" />
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+{% endblock %}

@@ -1,8 +1,69 @@
 {% extends "layout.html" %}
 
-{% block page_title %}乐享-首页{% endblock %}
+{% block page_title %}享乐-首页{% endblock %}
 {% block page_id %}page-index{% endblock %}
 
 {% block body %}
-   <h3>全部作品</h3>
+    {# <legend>全部作品</legend> #}
+    <div class="row">
+        {# The local date and time is {{ moment(current_time).format('LLL') }}. #}
+        {# <p>That was {{ moment(current_time).fromNow(refresh=True) }}</p>. #}
+        <div class='col-md-9'>
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+             <div class='works-wap'>
+                {% if works.count() == 0 %}
+                    暂无
+                {% endif %}
+                {% for work in works %}
+                    <div class='work-item'>
+                        <a href="{{ url_for('site.work', work_id=work.id) }}">
+                            {% if work.cate_id == 1 %}
+                                <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % work.cover_path) }}" title="{{ work.title }}" alt="{{ work.title }}">
+                            {% endif %}
+                            <p class='title'>{{ work.title }}</p>
+                            <p class='director'>{{ work.director }}</p>
+                        </a>
+                    </div>
+                {% endfor%}
+            </div>
+        </div>
+        <div class='col-md-3'>
+             <div class='comments-section'>
+                <div class="comments-header">
+                    最近评论(<a href="{{ url_for('site.comments') }}">所有评论</a>)
+                </div>
+                <div class="comments-wap">
+                    {% if newest_comments.count() > 0 %}
+                        {% for comment in newest_comments %}
+                            <div class="comment-item">
+                                <div class="comment-info">
+                                    <div class="comment-username-created">
+                                        <li class="comment-username">{{ comment.user.username }}</li>
+                                        <li> &nbsp;于&nbsp; </li>
+                                        {# <li>{{ comment.created }}</li> #}
+                                        <li>{{ moment(comment.created).fromNow(refresh=True) }}</li>
+                                    </div>
+                                    <div class="comement-workname">
+                                        在《<a href="{{ url_for('site.work', work_id=comment.work.id) }}" target="_blank">{{ comment.work.title }}</a>》留言：
+
+                                    </div>
+                                </div>
+                                <div class="comment-content">
+                                    {{ comment.content | markdown | safe }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        暂无
+                    {% endif %}
+                </div>
+             </div>
+        </div>
+    </div>
 {% endblock %}
+

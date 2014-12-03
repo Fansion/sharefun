@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% from "macro/common.html" import field_errors, horizontal_field %}
+
+{% block page_title %}注册
+{% endblock %}
+{% block page_id %}page-register
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <legend>注册页面</legend>
+        <div class='col-md-6'>
+            <form id="form-register" class="form-horizontal" method="POST" action="{{ url_for('auth.register') }}">
+                <fieldset>
+                    {{ form.csrf_token }}
+
+                    {{ horizontal_field(form.email, length=5) }}
+                    {{ horizontal_field(form.username, length=5) }}
+                    {{ horizontal_field(form.password, length=5) }}
+                    {{ horizontal_field(form.confirm, length=5) }}
+
+                    <div class="form-group">
+                        <div class="col-md-3 col-md-offset-2">
+                            <input type="submit" value="提交" class="btn btn-sm btn-primary" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class='col-md-4'>
+            <div class="jumbotron">
+              <h4>[备注]</h4>
+              <p>- 默认你的身份为游客</p>
+              <p>- 游客只能浏览本站主页,评论和推荐列表</p>
+              <p>- 注册用户另外还可以发表评论和推荐喜欢的作品</p>
+              <p>- 已经注册? 点击进入<a href="{{ url_for('auth.signin') }}"><i class="fa fa-sign-in"></i>登陆</a>页面</p>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,6 +1,17 @@
 .idea/
 venv/
 *.pyc
-notes
+others/*
+log.out
+
+# config
+celery*
 sharefun/config.py
-sharefun/static/test-dist/*
+
+# pics
+sharefun/static/covers/*
+
+# spider
+sharefun/script/spider/webpages/*
+sharefun/script/spider/spider_config.py
+dump.rdb

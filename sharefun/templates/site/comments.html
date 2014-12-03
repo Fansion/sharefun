@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% from "macro/common.html" import pagination %}
+
+{% block page_title %}享乐-所有评论页{% endblock %}
+{% block page_id %}page-comments{% endblock %}
+
+{% block body %}
+    <div class="col-md-8">
+        <div class="comments-wap">
+            {% if not comments.items %}
+                暂无
+            {% endif %}
+            {% for comment in comments.items %}
+                <div class="comment-item">
+                    <div class="comment-content">
+                        {{ comment.content | markdown | safe }}
+                    </div>
+                    <div class="comment-info">
+                        <li class="comment-username">{{ comment.username }}</li>
+                        <li>&nbsp;</li>
+                        <li class="comment-created">{{ moment(comment.created).fromNow(refresh=True) }}</li>
+                        <li>&nbsp;</li>
+                        <li class="comment-workname">《<a href="{{ url_for('site.work', work_id=comment.work.id) }}" target="_blank">{{ comment.work.title }}</a>》</li>
+
+                    </div>
+                </div>
+                <hr/>
+            {% endfor %}
+            {{ pagination(comments) }}
+        </div>
+    </div>
+{% endblock %}
+

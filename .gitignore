@@ -5,13 +5,19 @@ others/*
 log.out
 
 # config
-celery*
+celery.conf
+celerybeat.conf
+celeryflower.conf
 sharefun/config.py
 
 # pics
 sharefun/static/covers/*
 
 # spider
+sharefun/script/spider/log.out
 sharefun/script/spider/webpages/*
 sharefun/script/spider/spider_config.py
+
 dump.rdb
+celerybeat.pid
+celerybeat-schedule

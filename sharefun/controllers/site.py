@@ -2,12 +2,11 @@
 
 __author__ = 'frank'
 
-from flask import render_template, Blueprint, redirect, url_for, request, flash
+from flask import render_template, Blueprint, redirect, url_for, request, flash, current_app
 from flask.ext.login import current_user
 
 from ..forms import WorkForm, CommentForm
 from ..models import db, Category, Work, Comment, Recommendation, Status
-from ..config import FLASK_COMMENTS_PER_PAGE
 
 import os
 from datetime import datetime
@@ -48,7 +47,8 @@ def work(work_id):
 @bp.route('/comments/page/<int:page>')
 def comments(page):
     """所有评论页"""
-    comments = Comment.query.order_by(Comment.created.desc()).paginate(page, FLASK_COMMENTS_PER_PAGE, error_out=True)
+    comments = Comment.query.order_by(Comment.created.desc()).paginate(
+        page, current_app.config['FLASK_COMMENTS_PER_PAGE'], error_out=True)
     return render_template('site/comments.html', comments=comments)
 
 

@@ -8,7 +8,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager
 from flask.ext.moment import Moment
 
-from . import config, filters, permissions
+from . import filters, permissions
+from .config import load_config
+
+config = load_config()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'

@@ -7,7 +7,6 @@ from wtforms import StringField, SubmitField, TextField, PasswordField, SelectFi
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 
 from models import Work, User
-from . import config
 
 
 class RegisterForm(Form):

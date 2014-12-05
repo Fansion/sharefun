@@ -8,7 +8,10 @@ log.out
 celery.conf
 celerybeat.conf
 celeryflower.conf
-sharefun/config.py
+sharefun/config/default.py
+sharefun/config/development.py
+sharefun/config/production.py
+sharefun/config/testing.py
 
 # pics
 sharefun/static/covers/*

@@ -108,6 +108,10 @@ def crawlMovieinfo(cate_name, title, director, author, genre, score, desc, url, 
         logging.info('搜索结果不包含 ' + title)
         raise EmptyResultException('搜索结果不包含 ' + title)
 
+    # 清除占用空间
+    os.remove(work_search_page_path)
+    os.remove(work_home_page_path)
+
     # .replace('<br />', 'newline')和.replace('newline', '<br/>')
     # 是为了解决.get_text()只能拿到标签中间的文本直接跳过<br/>的问题
     soup = BeautifulSoup(work_page.replace('<br />', 'newline'))

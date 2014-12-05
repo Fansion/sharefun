@@ -1,0 +1,14 @@
+spider
+===============
+
+本模块包含主类crawlDoubanWorkInfo.py，crawller.py为使用bs3版本的爬虫。
+spider_config.py为参数配置文件，python_mysql.py处理数据库相关操作。
+
+其中待抓取作品名称存放在names，抓取成功作品名称在successful_names，抓取失败名称在failed_names。
+log.out为抓取日志文件。
+
+
+在提交推荐请求时将作品种类名称写进names。
+使用celery分布式任务队列定期执行抓取操作（设置crontab定时也能完成基本操作，但无法保证抓取服务的稳定/可拓展等）。用flower对抓取任务的执行进行查询管理。使用supervisor保证后台进程稳定运行。
+使用的配置文件有celery.conf，celerybeat.conf，celeryflower.conf。
+对应的日至文件在/var/log/celery下。

@@ -5,4 +5,15 @@ Flask-WTF
 Flask-Script
 Flask-Mail
 flask_debugtoolbar
+
 gunicorn
+BeautifulSoup4
+markdown2
+Werkzeug
+Flask-Login
+Flask-Migrate
+flask-moment
+Celery
+redis
+flower
+fabric

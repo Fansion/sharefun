@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% from "macro/common.html" import field_errors, horizontal_field %}
+
+{% block page_title %}登陆
+{% endblock %}
+{% block page_id %}page-signin
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <legend>登陆页面</legend>
+        <div class='col-md-6'>
+            <form id="form-signin" class="form-horizontal" method="POST" action="">
+                <fieldset>
+                    {{ form.csrf_token }}
+
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-1">
+                            {% for message in get_flashed_messages() %}
+                                <div class="alert alert-warning">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {{ horizontal_field(form.email, length=5) }}
+                    {{ horizontal_field(form.password, length=5) }}
+                    {{ horizontal_field(form.remember_me, length=1) }}
+
+                    <div class="form-group">
+                        <div class="col-md-3 col-md-offset-2">
+                            <input type="submit" value="提交" class="btn btn-sm btn-primary" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class='col-md-4'>
+            <div class="jumbotron">
+              <h4>[备注]</h4>
+              <p>- 登陆后就可以发表评论并向大家推荐你喜欢的作品了</p>
+              <p>- 还没注册? 点击进入<a href="{{ url_for('auth.register') }}"><i class="fa fa-edit"></i>注册</a>页面
+</p>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

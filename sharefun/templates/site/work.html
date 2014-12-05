@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% from "macro/common.html" import field_errors, horizontal_field %}
+
+{% block page_title %}享乐-作品页{% endblock %}
+{% block page_id %}page-work{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class='col-md-8'>
+            <div class="work-header">
+                {% if work.cate_id == 1 %}
+                    <img class="work-cover img-responsive" src=" {{ url_for('static', filename='%s' % work.cover_path) }} " title="{{ work.title }}" alt="{{ work.title }}">
+                {% endif %}
+                <div class="work-info-wap">
+                    <h1>{{ work.title }}</h1>
+                    <p class='score'>{{ work.score }}分</p>
+                    <p class='genre'>{{ work.genre }}</p>
+                </div>
+            </div>
+            <h4>简介</h4>
+            {% if work.cate_id == 1 %}
+                <div class='work-desc'>{{ work.desc|safe }}</div>
+            {% endif %}
+            <div class="work-comments">
+                {% if current_user.is_authenticated() %}
+                    <div class="write-comment">
+                        <h4>发表评论</h4>
+                        <hr/>
+                        <form id="form-comment" class="form-horizontal" method="POST" action="{{ url_for('site.work', work_id=work.id) }}">
+                            {{ form.csrf_token }}
+                            {{ horizontal_field(form.content, length=12, label=False) }}
+                            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> 发表评论</button>
+                        </form>
+                    </div>
+
+                {% endif %}
+
+                {% if work.comments.count() > 0 %}
+                    <h4>最新评论</h4>
+                    <hr/>
+                    <div class="comments-wap">
+                        {% for comment in work.comments %}
+                            <div class="comment-item">
+                                <div class="comment-info">
+                                    <div class="comment-username">
+                                        {{ comment.user.username }}
+                                    </div>
+                                    <div class="comment-created">
+                                    {{ moment(comment.created).fromNow(refresh=True) }}
+                                    </div>
+                                </div>
+                                <div class="comment-content">
+                                    {{ comment.content | markdown | safe }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+<!-- 多说评论框 start -->
+            {# <h4>多说评论</h4> #}
+            {# <hr/> #}
+            {# <div class="ds-thread" data-thread-key="请将此处替换成文章在你的站点中的ID" data-title="请替换成文章的标题" data-url="请替换成文章的网址"></div> #}
+            {# <div class="ds-thread" data-thread-key="{{ work.id }}" data-title="{{ work.title }}" data-url="{{ url_for('site.work', work_id=work.id) }}"></div> #}
+<!-- 多说评论框 end -->
+        </div>
+        <div class='col-md-4'>
+             <div class='work-douban-link'>
+                {% if work.url %}
+                   <a href="{{ work.url }}" target="_blank">
+                      <img src="http://img3.douban.com/pics/douban-icons/favicon_32x32.png" title="《{{ work.title }}》豆瓣主页" class="img-responsive">
+                   </a>
+                {% endif %}
+             </div>
+        </div>
+    </div>
+
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ifanan"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+{% endblock %}
+

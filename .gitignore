@@ -24,3 +24,6 @@ sharefun/script/spider/spider_config.py
 dump.rdb
 celerybeat.pid
 celerybeat-schedule
+
+# fabric
+fabfile.py

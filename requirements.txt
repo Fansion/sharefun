@@ -16,3 +16,4 @@ flask-moment
 Celery
 redis
 flower
+fabric

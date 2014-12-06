@@ -23,7 +23,10 @@ from bs4 import BeautifulSoup
 from spider_config import *
 from python_mysql import *
 
-logging.basicConfig(filename='log.out',filemode='a', format='%(asctime)s,%(name)s %(levelname)5s %(message)s',datefmt='%H:%M:%S',level=logging.DEBUG)
+LOG_PATH = '/var/log/sharefun/spider'
+logging.basicConfig(filename=os.path.join(LOG_PATH, 'log.out'), filemode='a',
+                    format='%(asctime)s,%(name)s %(levelname)5s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
+
 
 class EmptyResultException(Exception):
 
@@ -132,7 +135,7 @@ def crawlMovieinfo(cate_name, title, director, author, genre, score, desc, url, 
             "span", property="v:summary").get_text().replace('newline', '<br/>').encode('utf-8')
 
     url_t = url.rstrip('/')
-    work_id = url_t[url_t.rindex('/')+1:]     # work douban_id
+    work_id = url_t[url_t.rindex('/') + 1:]     # work douban_id
     # 换中图（lpst大图，ipst小图）
     cover_url = tables[1].find('img').get("src").replace("ipst", "lpst")
     cover_path = os.path.join(
@@ -145,7 +148,7 @@ def crawlMovieinfo(cate_name, title, director, author, genre, score, desc, url, 
     # return "\n".join([title, director, author, genre, str(score), desc, url,
     # cover_url, cover_path])
     # 将图片写进,../../static/covers/X.jpg, 但保存路径时只保存covers/X.jpg, url_for('static'. cover_path)
-    return title, director, author, genre, score, desc, url, cover_url, cover_path[cover_path.find('static/')+7:]
+    return title, director, author, genre, score, desc, url, cover_url, cover_path[cover_path.find('static/') + 7:]
 
 
 def getWorkinfo(cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH):
@@ -177,7 +180,7 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
         work_title = catename_worktitle.strip('\n').split(':')[1]
         conn = Connection(dbHOST, dbNAME, dbUSER, dbPASSWORD)
         print '-' * 40
-        logging.info('-'*40)
+        logging.info('-' * 40)
         try:
             title, director, author, genre, score, desc, url, cover_url, cover_path = getWorkinfo(cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH)
             q = "select * from " + dbWORKSNAME + \
@@ -193,7 +196,8 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
                 # 读取文件内容查看该类别作品是否已经被成功抓取
                 success.seek(0)
                 if cate_name + ':' + work_title not in success.read():
-                    success.write('UTC+8 ' + str(datetime.datetime.now()) + ':' + cate_name + ':' + work_title + '\n')
+                    success.write(
+                        'UTC+8 ' + str(datetime.datetime.now()) + ':' + cate_name + ':' + work_title + '\n')
                 success.seek(2)
                 print cate_name + ' ' + title + ' 信息成功写入数据库'
                 logging.info(cate_name + ' ' + title + ' 信息成功写入数据库')
@@ -203,7 +207,7 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
         except Exception, e:
             # 读取文件内容查看该类别作品是否已经抓取失败并记录
             failure.seek(0)
-            if cate_name + ':' + work_title  not in failure.read():
+            if cate_name + ':' + work_title not in failure.read():
                 failure.write('UTC+8 ' + str(datetime.datetime.now()) + ':' + cate_name + ':' + work_title + '\n')
             failure.seek(2)
             exc_type, exc_obj, exc_tb = sys.exc_info()

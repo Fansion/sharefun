@@ -2,7 +2,7 @@
 
 __author__ = 'frank'
 
-from .default import Config
+from .default_sample import Config
 
 
 class DevelopmentConfig(Config):

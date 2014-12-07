@@ -35,6 +35,7 @@ def run():
 
 @manager.command
 def initialize():
+    """初始化数据库"""
     Category.insert_cates()
     Role.insert_roles()
     Status.insert_statuses()

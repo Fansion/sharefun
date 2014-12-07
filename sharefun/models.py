@@ -31,7 +31,7 @@ class Category(db.Model):
     @staticmethod
     def insert_cates():
         cates = {'电影': 0}
-        for n, i in cates.iteritems:
+        for n, i in cates.iteritems():
             category = Category.query.filter_by(name=n)
             if category is None:
                 category = Category(name=n)

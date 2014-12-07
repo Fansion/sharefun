@@ -187,12 +187,12 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
                 " where title = %s and cate_id = %s"        # 此处只有where从句中的变量能用%s
             qparas = [title, CATENAME_TO_CATEID[cate_name]]
             if not conn.query(q, *qparas):
-                # conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre=genre, score=score, desc=desc, url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
-                # u = "update " + dbRECOMMSNAME + \
-                #     " set status_id = 3 where status_id = 2 and cate_id = %s and name = %s"
-                # uparas = [CATENAME_TO_CATEID[cate_name], work_title]
-                # conn.execute(u, *uparas)
-                # conn.commit()
+                conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre=genre, score=score, desc=desc, url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
+                u = "update " + dbRECOMMSNAME + \
+                    " set status_id = 3 where status_id = 2 and cate_id = %s and name = %s"
+                uparas = [CATENAME_TO_CATEID[cate_name], work_title]
+                conn.execute(u, *uparas)
+                conn.commit()
                 # 读取文件内容查看该类别作品是否已经被成功抓取
                 success.seek(0)
                 if cate_name + ':' + work_title not in success.read():

@@ -28,6 +28,17 @@ class Category(db.Model):
     recommendations = db.relationship(
         'Recommendation', backref='category', lazy='dynamic', order_by='desc(Work.created)')
 
+    @staticmethod
+    def insert_cates():
+        cates = {'电影': 0}
+        for n, i in cates.iteritems:
+            category = Category.query.filter_by(name=n)
+            if category is None:
+                category = Category(name=n)
+            category.index = i
+            db.session.add(category)
+        db.session.commit()
+
     def __repr__(self):
         return '<Category %s>' % self.name
 
@@ -99,6 +110,16 @@ class Status(db.Model):
 
     recommendations = db.relationship(
         'Recommendation', backref='status', lazy='dynamic', order_by='desc(Recommendation.created)')
+
+    @staticmethod
+    def insert_statuses():
+        names = ['待审核', '审核通过暂未上架', '审核通过已上架', '审核不通过', '隐藏无效']
+        for n in names:
+            status = Status.query.filter_by(name=n):
+            if status is none:
+                status = Status(name=n)
+            db.session.add(status)
+        db.session.commit()
 
     def __repr__(self):
         return "Status %s" % self.name
@@ -179,6 +200,13 @@ class User(UserMixin, db.Model):
         'Comment', backref='user', lazy='dynamic', order_by='desc(Comment.created)')
     recommendations = db.relationship(
         'Recommendation', backref='user', lazy='dynamic', order_by='desc(Recommendation.created)')
+
+    @staticmethod
+    def insert_admin():
+        u = User(email=current_app.config[
+                 'FLASKY_ADMIN'], username='root', password=current_app.config['FLASKY_PASSWORD'])
+        db.session.add(u)
+        db.session.commit()
 
     def __repr__(self):
         return "User %s" % self.username

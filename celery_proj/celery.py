@@ -15,8 +15,8 @@ app.conf.update(
     CELERYBEAT_SCHEDULE={
         'crawller': {
             'task': 'celery_proj.tasks.crawller',
-            # 'schedule': timedelta(seconds=10)
-            'schedule': crontab(hour='0,6,12,18', minute=0)
+            'schedule': timedelta(seconds=10)
+            # 'schedule': crontab(hour='0,6,12,18', minute=0)
         }
     }
 )

@@ -15,4 +15,4 @@ class ProductionConfig(Config):
     DB_HOST = 'localhost'
     DB_NAME = 'sf'
 
-    SECRET_KEY = '6.Z;;Op02;EgK4&l`E~>%9~*ol325M'
+    SECRET_KEY = ';;963qRU}1j99kjzb8^k3x(8&@6-B{'

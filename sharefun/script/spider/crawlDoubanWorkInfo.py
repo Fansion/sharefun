@@ -64,9 +64,9 @@ def crawlMovieinfo(cate_name, title, director, author, genre, score, desc, url, 
                 work_search_page.write(str(works_page))
                 work_search_page.close()
         except Exception, e:
-            logging.debug('搜索' + title + +'失败: ' + search_url)
+            logging.debug('搜索' + title + '失败: ' + search_url)
             logging.exception(e)
-            raise ConnectionException('搜索' + title + +'失败: ' + search_url)
+            raise ConnectionException('搜索' + title + '失败: ' + search_url)
     else:
         works_page = urlopen(work_search_page_path).read()
 

@@ -71,5 +71,20 @@ class crawllerTest(unittest.TestCase):
         self.assertTrue(conn.query(q, *qparas))
 
 
+    def test_readfromfile_and_writeintofile():
+
+        names = open(NAMES_PATH, 'r')  # w+是先清空文件内容再操作
+        for catename_worktitle in names.readlines():
+            cate_name = catename_worktitle.strip('\n').split(':')[0]
+            work_title = catename_worktitle.strip('\n').split(':')[1]
+            print type(work_title)
+            print isinstance(work_title, unicode)
+            print cate_name, work_title
+            print work_title.decode('utf-8')
+            work_search_page_path = os.path.join(
+                WEBPAGES_PATH,  CATENAME_CHIN_TO_ENG[cate_name] + '_' + work_title + '_search_page.html')
+            print work_search_page_path
+
+
 if __name__ == '__main__':
     unittest.main()

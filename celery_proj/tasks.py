@@ -25,7 +25,7 @@ def crawller():
                 cateid_to_catename(recommendation.cate_id) + ':' + recommendation.name + '\n')
     names_file.close()
 
-    main(NAMES_PATH, config.SUCCESSFUL_NAMES_PATH,
+    main(config.NAMES_PATH, config.SUCCESSFUL_NAMES_PATH,
          config.FAILED_NAMES_PATH, config.WEBPAGES_PATH, config.COVERS_FOLDER_PATH)
 
 

@@ -115,7 +115,7 @@ class Status(db.Model):
     def insert_statuses():
         names = ['待审核', '审核通过暂未上架', '审核通过已上架', '审核不通过', '隐藏无效']
         for n in names:
-            status = Status.query.filter_by(name=n):
+            status = Status.query.filter_by(name=n)
             if status is none:
                 status = Status(name=n)
             db.session.add(status)

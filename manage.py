@@ -21,7 +21,7 @@ manager.add_command('db', MigrateCommand)
 # Status.insert_statuses()
 # User.insert_admin()
 def make_context():
-    return dict(app=app, db=db, User=User, Role=Role, Permission=Permission)
+    return dict(app=app, db=db, User=User, Role=Role, Category=Category, Status=Status, Permission=Permission)
 manager.add_command("shell", Shell(make_context=make_context))
 
 

@@ -15,7 +15,7 @@ migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
 
 
-# """初始化数据库"""
+# """进入server初始化数据库"""
 # Category.insert_cates()
 # Role.insert_roles()
 # Status.insert_statuses()

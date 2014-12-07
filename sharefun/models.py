@@ -32,7 +32,7 @@ class Category(db.Model):
     def insert_cates():
         cates = {'电影': 0}
         for n, i in cates.iteritems():
-            category = Category.query.filter_by(name=n)
+            category = Category.query.filter_by(name=n).first()
             if category is None:
                 category = Category(name=n)
             category.index = i
@@ -115,8 +115,8 @@ class Status(db.Model):
     def insert_statuses():
         names = ['待审核', '审核通过暂未上架', '审核通过已上架', '审核不通过', '隐藏无效']
         for n in names:
-            status = Status.query.filter_by(name=n)
-            if status is none:
+            status = Status.query.filter_by(name=n).first()
+            if status is None:
                 status = Status(name=n)
             db.session.add(status)
         db.session.commit()

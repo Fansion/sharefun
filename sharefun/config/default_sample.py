@@ -11,6 +11,7 @@ class Config:
 
     # administrator
     FLASKY_ADMIN = 'admin@default.com'
+    FLASKY_PASSWORD = 'default'
 
     # number
     FLASK_COMMENTS_PER_PAGE = 5

@@ -8,6 +8,7 @@ from .default import Config
 class ProductionConfig(Config):
 
     FLASKY_ADMIN = 'admin@production.com'
+    FLASKY_PASSWORD = 'production'
 
     # db config
     DB_USER = 'www-data'

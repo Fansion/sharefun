@@ -12,6 +12,7 @@ class TestingConfig(Config):
     WTF_CSRF_ENABLED = False
 
     FLASKY_ADMIN = 'admin@testing.com'
+    FLASKY_PASSWORD = 'testing'
 
     # db config
     DB_USER = 'user'

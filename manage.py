@@ -5,7 +5,7 @@ __author__ = 'frank'
 
 from flask.ext.script import Manager, Shell
 from sharefun import app
-from sharefun.models import db, User, Role, Permission
+from sharefun.models import db, User, Role, Permission, Category, Status
 from flask.ext.migrate import Migrate, MigrateCommand
 
 
@@ -31,6 +31,14 @@ def test():
 @manager.command
 def run():
     app.run(debug=True)
+
+
+@manager.command
+def initialize():
+    Category.insert_cates()
+    Role.insert_roles()
+    Status.insert_statuses()
+    User.insert_admin()
 
 
 @manager.command

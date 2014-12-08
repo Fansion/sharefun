@@ -11,8 +11,6 @@ from flask.ext.moment import Moment
 from . import filters, permissions
 from .config import load_config
 
-config = load_config()
-
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.signin'
@@ -94,6 +92,7 @@ def register_moment(app):
 
 def create_app():
     app = Flask(__name__)
+    config = load_config()
     app.config.from_object(config)
 
     # CSRF protect

@@ -16,7 +16,7 @@
                         {{ comment.content | markdown | safe }}
                     </div>
                     <div class="comment-info">
-                        <li class="comment-username">{{ comment.username }}</li>
+                        <li class="comment-username">{{ comment.user.username }}</li>
                         <li>&nbsp;</li>
                         <li class="comment-created">{{ moment(comment.created).fromNow(refresh=True) }}</li>
                         <li>&nbsp;</li>

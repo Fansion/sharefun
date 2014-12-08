@@ -11,6 +11,8 @@ from flask.ext.moment import Moment
 from . import filters, permissions
 from .config import load_config
 
+config = load_config()
+
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.signin'
@@ -73,13 +75,25 @@ def register_db(app):
     from .models import db
     db.init_app(app)
 
+
+def register_logger(app):
+    """send error log to admin by smtp"""
+    if not app.debug:
+        import logging
+        from logging.handlers import SMTPHandler
+        credentials = (config.SMTP_USER, config.SMTP_PASSWORD)
+        mail_handler = SMTPHandler((config.SMTP_SERVER, config.SMTP_PORT), config.SMTP_FROM,
+                                   config.SMTP_ADMIN, 'sf-log', credentials)
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
+
+
 def register_moment(app):
     moment = Moment(app)
 
 
 def create_app():
     app = Flask(__name__)
-    config = load_config()
     app.config.from_object(config)
 
     # CSRF protect
@@ -109,14 +123,3 @@ def create_app():
     return app
 
 app = create_app()
-
-def register_logger(app):
-    """send error log to admin by smtp"""
-    if not app.debug:
-        import logging
-        from logging.handlers import SMTPHandler
-        credentials = (config.SMTP_USER, config.SMTP_PASSWORD)
-        mail_handler = SMTPHandler((config.SMTP_SERVER, config.SMTP_PORT), config.SMTP_FROM,
-                                   config.SMTP_ADMIN, 'sf-log', credentials)
-        mail_handler.setLevel(logging.ERROR)
-        app.logger.addHandler(mail_handler)

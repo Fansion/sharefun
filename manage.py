@@ -15,11 +15,6 @@ migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
 
 
-# """进入server初始化数据库"""
-# Category.insert_cates()
-# Role.insert_roles()
-# Status.insert_statuses()
-# User.insert_admin()
 def make_context():
     return dict(app=app, db=db, User=User, Role=Role, Category=Category, Status=Status, Permission=Permission)
 manager.add_command("shell", Shell(make_context=make_context))

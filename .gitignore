@@ -27,3 +27,6 @@ celerybeat-schedule
 
 # fabric
 fabfile.py
+
+# sql
+initialization.sql

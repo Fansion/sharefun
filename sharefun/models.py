@@ -8,6 +8,8 @@ from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import login_manager
+from permissions import Permission
+
 import datetime
 
 
@@ -35,8 +37,8 @@ class Category(db.Model):
             category = Category.query.filter_by(name=n).first()
             if category is None:
                 category = Category(name=n)
-            category.index = i
-            db.session.add(category)
+                category.index = i
+                db.session.add(category)
         db.session.commit()
 
     def __repr__(self):
@@ -118,13 +120,11 @@ class Status(db.Model):
             status = Status.query.filter_by(name=n).first()
             if status is None:
                 status = Status(name=n)
-            db.session.add(status)
+                db.session.add(status)
         db.session.commit()
 
     def __repr__(self):
         return "Status %s" % self.name
-
-from permissions import Permission
 
 
 class Role(db.Model):
@@ -149,9 +149,9 @@ class Role(db.Model):
             role = Role.query.filter_by(name=r).first()
             if role is None:
                 role = Role(name=r)
-            role.permissions = roles[r][0]
-            role.default = roles[r][1]
-            db.session.add(role)
+                role.permissions = roles[r][0]
+                role.default = roles[r][1]
+                db.session.add(role)
         db.session.commit()
 
     def __repr__(self):
@@ -203,10 +203,13 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def insert_admin():
-        u = User(email=current_app.config[
-                 'FLASKY_ADMIN'], username='root', password=current_app.config['FLASKY_PASSWORD'])
-        db.session.add(u)
-        db.session.commit()
+        u = User.query.filter_by(
+            eamil=current_app.config['FLASKY_ADMIN']).first()
+        if u is None:
+            u = User(email=current_app.config[
+                     'FLASKY_ADMIN'], username='root', password=current_app.config['FLASKY_PASSWORD'])
+            db.session.add(u)
+            db.session.commit()
 
     def __repr__(self):
         return "User %s" % self.username

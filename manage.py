@@ -41,5 +41,13 @@ def crawller():
     crawller.delay()
 
 
+@manager.command
+def backup():
+    """手动备份数据库"""
+    from celery_proj.tasks import backup
+
+    backup.delay()
+
+
 if __name__ == '__main__':
     manager.run()

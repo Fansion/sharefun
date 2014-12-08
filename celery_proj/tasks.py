@@ -10,6 +10,8 @@ from sharefun.config import load_config
 from sharefun.filters import cateid_to_catename
 
 import os
+from subprocess import call
+from datetime import datetime
 
 config = load_config()
 
@@ -27,6 +29,16 @@ def crawller():
 
     main(config.NAMES_PATH, config.SUCCESSFUL_NAMES_PATH,
          config.FAILED_NAMES_PATH, config.WEBPAGES_PATH, config.COVERS_FOLDER_PATH)
+
+
+@app.task
+def backup():
+    """备份mysql数据库"""
+    t = datetime.now().strftime('%y-%m-%d_%H.%M.%S')
+    f = 'backup-sf-%s.sql' % t
+    call("mysqldump -u%s -p%s --skip-opt --add-drop-table --default-character-set=utf8 --quick sf > %s" %
+         (config.DB_USER, config.DB_PASSWORD, f), shell=True)
+    call("mv %s /home/frank" % f, shell=True)
 
 
 @app.task

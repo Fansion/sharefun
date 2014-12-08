@@ -204,7 +204,7 @@ class User(UserMixin, db.Model):
     @staticmethod
     def insert_admin():
         u = User.query.filter_by(
-            eamil=current_app.config['FLASKY_ADMIN']).first()
+            email=current_app.config['FLASKY_ADMIN']).first()
         if u is None:
             u = User(email=current_app.config[
                      'FLASKY_ADMIN'], username='root', password=current_app.config['FLASKY_PASSWORD'])

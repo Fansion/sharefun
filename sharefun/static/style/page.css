@@ -51,15 +51,15 @@ html body #footer a {
 html body #footer img {
   display: none;
 }
-html body #footer .container #copyright {
+html body #copyright {
   float: left;
 }
-html body #footer .container #links {
+html body #links {
   float: right;
   margin: 0;
   list-style-type: none;
 }
-html body #footer .container #links li {
+html body #links li {
   display: inline-block;
 }
 #page-index .works-wap {

@@ -37,9 +37,7 @@ def backup():
     t = datetime.now().strftime('%y-%m-%d_%H.%M.%S')
     f = 'backup-sf-%s.sql' % t
     call("mysqldump -u%s -p%s --skip-opt --add-drop-table --default-character-set=utf8 --quick sf > %s" %
-         (config.DB_USER, config.DB_PASSWORD, f), shell=True)
-    call("mv %s /home/frank" % f, shell=True)
-
+         (config.DB_USER, config.DB_PASSWORD, os.path.join('/home/frank/sf-backup',f)), shell=True)
 
 @app.task
 def add(x, y):

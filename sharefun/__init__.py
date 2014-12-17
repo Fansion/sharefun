@@ -115,6 +115,8 @@ def create_app():
     app.jinja_env.filters[
         'statusid_to_statusname'] = filters.statusid_to_statusname
     app.jinja_env.filters['normalize'] = filters.normalize
+    app.jinja_env.filters['engrolename_chinrolename'] = filters.engrolename_chinrolename
+    app.jinja_env.filters['ismyself'] = filters.ismyself
 
     @app.before_request
     def before_request():

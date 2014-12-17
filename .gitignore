@@ -31,3 +31,6 @@ fabfile.py
 # sql
 initialization.sql
 backup-sf.tar.gz
+
+# mysql
+migrations/*

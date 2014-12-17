@@ -9,6 +9,9 @@
 
 {% block body %}
     {# <legend>推荐列表</legend> #}
+    <h5>备注:</h5>
+    <p>推荐作品需经过后台管理员审核，结果为审核通过或审核不通过。审核通过的作品分为暂未上架和已上架，后台爬虫每天定时4次对审核通过的作品信息进行抓取并上架。审核通过但长期未上架的作品需要模拟登陆豆瓣进行抓取，目前尚未完成该功能。</p>
+    <br/>
     {% for statusid_recommendation in statusids_recommendations %}
         {% if statusid_recommendation[0] == 1 %}
             {{ generate_table('待审核', statusid_recommendation[1]) }}

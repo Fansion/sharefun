@@ -41,12 +41,12 @@ class crawllerTest(unittest.TestCase):
         title = 'agafdgdsagf'
         """测试搜索结果为空"""
         with self.assertRaises(EmptyResultException):
-            crawlMovieInfo('电影', title, '', '', '', '', '', '', '', '')
+            crawlMovieInfo('电影', title, '', '', '', '', '', '', '', '', '', '')
 
         title = '春风沉醉的夜晚'
         """测试搜索结果不包含"""
         with self.assertRaises(EmptyResultException):
-            crawlMovieInfo('电影', title, '', '', '', '', '', '', '', '')
+            crawlMovieInfo('电影', title, '', '', '', '', '', '', '', '', '', '')
 
     def testOutput(self):
         text = """ <div class="indent" id="link-report">
@@ -58,10 +58,9 @@ class crawllerTest(unittest.TestCase):
                         </span>
             </div>"""
         soup = BeautifulSoup(text)
-        print soup.find("span", property="v:summary").get_text()
+        print soup.find("span", property="v:summary").get_text().encode('utf-8')
 
     def test_python_mysql_query(self):
-        """测试python_mysql的query"""
         conn = Connection(dbHOST, dbNAME, dbUSER, dbPASSWORD)
         q = "select * from " + dbWORKSNAME + \
             " where title = %s and cate_id = %s"
@@ -70,8 +69,14 @@ class crawllerTest(unittest.TestCase):
         qparas = [title, CATENAME_TO_CATEID[cate_name]]
         self.assertTrue(conn.query(q, *qparas))
 
+    def test_python_mysql_insert(self):
+        conn = Connection(dbHOST, dbNAME, dbUSER, dbPASSWORD)
+        print 'id is',conn.insert("roles", name='Test', default=0, permissions=0)
+        q = "DELETE FROM `roles` WHERE permissions = 0"
+        print conn.execute(q)
+        conn.commit()
 
-    def test_readfromfile_and_writeintofile():
+    def test_readfromfile_and_writeintofile(self):
 
         names = open(NAMES_PATH, 'r')  # w+是先清空文件内容再操作
         for catename_worktitle in names.readlines():

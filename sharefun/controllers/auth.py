@@ -48,5 +48,5 @@ def signin():
 @login_required
 def signout():
     logout_user()
-    flash('成功退出,欢迎再次登陆')
+    flash('成功登出,欢迎再次登入')
     return redirect(url_for('site.index'))

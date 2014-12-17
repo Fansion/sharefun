@@ -16,7 +16,7 @@
                         {{ comment.content | markdown | safe }}
                     </div>
                     <div class="comment-info">
-                        <li class="comment-username">{{ comment.user.username }}</li>
+                        <li class="comment-username"><a href="{{ url_for('site.user', id=comment.user_id) }}" target="_blank">{{ comment.user.username | ismyself | normalize }}</a></li>
                         <li>&nbsp;</li>
                         <li class="comment-created">{{ moment(comment.created).fromNow(refresh=True) }}</li>
                         <li>&nbsp;</li>

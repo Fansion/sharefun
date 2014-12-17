@@ -15,6 +15,7 @@
                     <h1>{{ work.title }}</h1>
                     <p class='score'>{{ work.score }}分</p>
                     <p class='genre'>{{ work.genre }}</p>
+                    <p class="introducer">由<a href="{{ url_for('site.user', id=work.recommendation.user.id) }}" target="_blank">{{ work.recommendation.user.username | ismyself | normalize }}</a>推荐</p>
                 </div>
             </div>
             <h4>简介</h4>

@@ -17,6 +17,10 @@ app.conf.update(
             'task': 'celery_proj.tasks.crawller',
             #'schedule': timedelta(seconds=10)
             'schedule': crontab(hour='0,6,12,18', minute=0)
+        },
+        'backup': {
+            'task': 'celery_proj.tasks.backup',
+            'schedule': crontab(hour='0', minute=0)
         }
     }
 )

@@ -33,6 +33,10 @@
             </div>
         </div>
         <div class='col-md-3'>
+             <div class="statistics">
+                <p>共{{ total }}个推荐</p>
+                <p> {{ success }}个已成功上架,{{ failure }}个未通过审核</p>
+             </div>
              <div class='comments-section'>
                 <div class="comments-header">
                     最近评论(<a href="{{ url_for('site.comments') }}">所有评论</a>)
@@ -43,13 +47,13 @@
                             <div class="comment-item">
                                 <div class="comment-info">
                                     <div class="comment-username-created">
-                                        <li class="comment-username">{{ comment.user.username }}</li>
+                                        <li class="comment-username"><a href="{{ url_for('site.user', id=comment.user_id) }}" target="_blank">{{ comment.user.username | ismyself | normalize }}</a></li>
                                         <li> &nbsp;于&nbsp; </li>
                                         {# <li>{{ comment.created }}</li> #}
                                         <li>{{ moment(comment.created).fromNow(refresh=True) }}</li>
                                     </div>
                                     <div class="comement-workname">
-                                        在《<a href="{{ url_for('site.work', work_id=comment.work.id) }}" target="_blank">{{ comment.work.title }}</a>》留言：
+                                        在《<a href="{{ url_for('site.work', work_id=comment.work.id) }}" target="_blank">{{ comment.work.title }}</a>》发表评论：
 
                                     </div>
                                 </div>

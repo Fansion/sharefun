@@ -50,6 +50,11 @@ class WorkForm(Form):
     title4 = TextField('作品4', description='准确的作品名称')
     title5 = TextField('作品5', description='准确的作品名称')
 
+    recomm_reason1 = TextField('推荐词', description='选填')
+    recomm_reason2 = TextField('推荐词', description='选填')
+    recomm_reason3 = TextField('推荐词', description='选填')
+    recomm_reason4 = TextField('推荐词', description='选填')
+    recomm_reason5 = TextField('推荐词', description='选填')
 
 class CommentForm(Form):
 

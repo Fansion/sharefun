@@ -47,7 +47,7 @@ def downloadPic(url, path):
     return False
 
 
-def crawlMovieinfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH):
+def crawlMovieInfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH):
     """抓取电影信息"""
     search_url = SEARCH_URL_PATTERN.replace(
         '{cate_name}', CATENAME_CHIN_TO_ENG[cate_name]).replace('{work_title}', title)
@@ -166,7 +166,7 @@ def getWorkinfo(cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH):
     cover_path = ''
 
     if cate_name == '电影':
-        return crawlMovieinfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH)
+        return crawlMovieInfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH)
 
 
 def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, COVERS_FOLDER_PATH):
@@ -187,10 +187,10 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
                 " where title = %s and cate_id = %s"        # 此处只有where从句中的变量能用%s
             qparas = [title, CATENAME_TO_CATEID[cate_name]]
             if not conn.query(q, *qparas):
-                conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre=genre, score=score, desc=desc, url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
+                wid = conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre=genre, score=score, desc=desc, url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
                 u = "update " + dbRECOMMSNAME + \
-                    " set status_id = 3 where status_id = 2 and cate_id = %s and name = %s"
-                uparas = [CATENAME_TO_CATEID[cate_name], work_title]
+                    " set status_id = 3, work_id = %s where status_id = 2 and cate_id = %s and name = %s "
+                uparas = [wid, CATENAME_TO_CATEID[cate_name], work_title]
                 conn.execute(u, *uparas)
                 conn.commit()
                 # 读取文件内容查看该类别作品是否已经被成功抓取

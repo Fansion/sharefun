@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% from "macro/common.html" import field_errors, horizontal_field %}
+{% from "macro/common.html" import field_errors, horizontal_field, two_horizontal_field %}
 
 {% block page_title %}推荐
 {% endblock %}
@@ -13,11 +13,11 @@
         <legend>推荐作品</legend>
         {{ form.csrf_token }}
         {{ horizontal_field(form.cate_id, length=3) }}
-        {{ horizontal_field(form.title1, length=3) }}
-        {{ horizontal_field(form.title2, length=3) }}
-        {{ horizontal_field(form.title3, length=3) }}
-        {{ horizontal_field(form.title4, length=3) }}
-        {{ horizontal_field(form.title5, length=3) }}
+        {{ two_horizontal_field(form.title1, form.recomm_reason1) }}
+        {{ two_horizontal_field(form.title2, form.recomm_reason2) }}
+        {{ two_horizontal_field(form.title3, form.recomm_reason3) }}
+        {{ two_horizontal_field(form.title4, form.recomm_reason4) }}
+        {{ two_horizontal_field(form.title5, form.recomm_reason5) }}
 
         <div class="form-group">
             <div class="col-md-3 col-md-offset-2">

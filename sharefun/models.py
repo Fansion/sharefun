@@ -65,6 +65,7 @@ class Work(db.Model):
 
     comments = db.relationship(
         'Comment', backref='work', lazy='dynamic', order_by='desc(Comment.created)')
+    recommendation = db.relationship('Recommendation', backref='work', uselist=False)
 
     def __repr__(self):
         return "Work %s" % self.title
@@ -94,10 +95,12 @@ class Recommendation(db.Model):
     created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     finished = db.Column(db.DateTime)
     remarks = db.Column(db.String(150))
+    recomm_reason = db.Column(db.String(150))
 
     cate_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     status_id = db.Column(db.Integer, db.ForeignKey('statuses.id'), default=1)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    work_id = db.Column(db.Integer, db.ForeignKey('works.id'))
 
     def __repr__(self):
         return "Recommendation %s" % self.name

@@ -47,6 +47,26 @@
     </div>
 {% endmacro %}
 
+{% macro two_horizontal_field(field1, field2, length1=3, length2=5, label=True) %}
+    <div class="form-group">
+        {% if label %}
+            {{ field1.label(class="col-md-2 control-label") }}
+        {% endif %}
+        <div class="col-md-{{ length1 }}">
+            {{ field1(class="form-control", placeholder=field1.description, **kwargs) }}
+            {{ field_errors(field1) }}
+        </div>
+
+        {% if label %}
+            {{ field2.label(class="col-md-1 control-label") }}
+        {% endif %}
+        <div class="col-md-{{ length2 }}">
+            {{ field2(class="form-control", placeholder=field2.description, **kwargs) }}
+            {{ field_errors(field2) }}
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro label_primary(field) %}
     <span class="label label-primary">
         {{ field }}
@@ -62,6 +82,7 @@
                 <td>名称</td>
                 <td>类别</td>
                 <td>推荐人</td>
+                <td>推荐词</td>
                 <td>提交时间</td>
                 <td>审核备注</td>
                 {% if current_user.is_authenticated() and current_user.is_administrator() %}
@@ -101,7 +122,8 @@
                         <td class="larger">{{ recommendation.name }}</td>
                     {% endif %}
                     <td>{{ label_primary(recommendation.cate_id | cateid_to_catename) }}</td>
-                    <td>{{ label_primary(recommendation.user.username | normalize) }}</td>
+                    <td>{{ label_primary(recommendation.user.username | ismyself | normalize) }}</td>
+                    <td>{{ label_primary(recommendation.recomm_reason | normalize) }}</td>
                     <td><span class="label label-primary">{{ moment(recommendation.created).fromNow(refresh=True) }}</span></td>
                     <td>{{ label_primary(recommendation.remarks | normalize) }}</td>
                     {% if current_user.is_authenticated() and current_user.is_administrator() %}

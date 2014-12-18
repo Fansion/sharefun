@@ -75,17 +75,31 @@ def register_db(app):
     from .models import db
     db.init_app(app)
 
+def get_mail_handler():
+    import logging
+    from logging.handlers import SMTPHandler
+    credentials = (config.SMTP_USER, config.SMTP_PASSWORD)
+    mail_handler = SMTPHandler(config.SMTP_SERVER, config.SMTP_FROM,
+                               config.SMTP_ADMIN, 'sf-log', credentials, ())
+    from logging import Formatter
+    mail_handler.setFormatter(Formatter('''
+        Message type:       %(levelname)s
+        Location:           %(pathname)s:%(lineno)d
+        Module:             %(module)s
+        Function:           %(funcName)s
+        Time:               %(asctime)s
+
+        Message:
+
+        %(message)s
+    '''))
+    mail_handler.setLevel(logging.ERROR)
+    return mail_handler
 
 def register_logger(app):
     """send error log to admin by smtp"""
     if not app.debug:
-        import logging
-        from logging.handlers import SMTPHandler
-        credentials = (config.SMTP_USER, config.SMTP_PASSWORD)
-        mail_handler = SMTPHandler((config.SMTP_SERVER, config.SMTP_PORT), config.SMTP_FROM,
-                                   config.SMTP_ADMIN, 'sf-log', credentials)
-        mail_handler.setLevel(logging.ERROR)
-        app.logger.addHandler(mail_handler)
+        app.logger.addHandler(get_mail_handler())
 
 
 def register_moment(app):

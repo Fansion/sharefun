@@ -243,25 +243,21 @@ html body #links li {
   margin-bottom: 100px;
 }
 #page-user .user-wap .username {
-  float: left;
   width: 100px;
   text-align: center;
   margin-right: 25px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
   border-radius: 3px;
 }
-#page-user .info {
-  float: left;
+#page-user .user-wap .info {
   overflow: hidden;
   color: gray;
-  margin-top: 30px;
 }
 #page-user .works-wap {
   margin-top: 40px;
 }
 #page-user .work-item {
   display: inline-block;
-/*  vertical-align: top;*/
   margin-bottom: 20px;
   margin-right: 40px;
   width: 130px;

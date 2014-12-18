@@ -21,7 +21,11 @@ app.conf.update(
         'backup': {
             'task': 'celery_proj.tasks.backup',
             'schedule': crontab(hour='0', minute=0)
-        }
+        },
+        'send_mail': {
+            'task': 'celery_proj.tasks.send_mail',
+            'schedule': crontab(hour='0', minute=0)
+        },
     }
 )
 

@@ -48,6 +48,13 @@ def backup():
 
     backup.delay()
 
+@manager.command
+def send_mail():
+    """手动发送邮件通知"""
+    from celery_proj.tasks import add, send_mail
+
+    # add.delay(int(x), int(y))
+    send_mail.delay()
 
 if __name__ == '__main__':
     manager.run()

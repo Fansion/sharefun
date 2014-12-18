@@ -34,3 +34,6 @@ backup-sf.tar.gz
 
 # mysql
 migrations/*
+
+# test
+sharefun/test.py

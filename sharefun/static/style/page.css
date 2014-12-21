@@ -141,7 +141,9 @@ html body #links li {
 #page-work .work-header .work-info-wap .score {
   color: gray;
 }
-#page-work .work-header .work-info-wap .genre {
+#page-work .work-header .work-info-wap .genre,
+#page-work .work-header .work-info-wap .genre a,
+#page-work .work-header .work-info-wap .introducer a {
   color: gray;
 }
 #page-work .work-desc {

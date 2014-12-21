@@ -49,6 +49,7 @@ class crawllerTest(unittest.TestCase):
             crawlMovieInfo('电影', title, '', '', '', '', '', '', '', '', '', '')
 
     def testOutput(self):
+        print 'inside testOutput():'
         text = """ <div class="indent" id="link-report">
 
                         <span property="v:summary" class="">
@@ -58,26 +59,37 @@ class crawllerTest(unittest.TestCase):
                         </span>
             </div>"""
         soup = BeautifulSoup(text)
+        # 输出带有换行
         print soup.find("span", property="v:summary").get_text().encode('utf-8')
 
     def test_python_mysql_query(self):
+        """query返回对应字段组成的dict集元组"""
         conn = Connection(dbHOST, dbNAME, dbUSER, dbPASSWORD)
-        q = "select * from " + dbWORKSNAME + \
+        q = "select id from " + dbWORKSNAME + \
             " where title = %s and cate_id = %s"
         cate_name = '电影'
         title = '空房间'
         qparas = [title, CATENAME_TO_CATEID[cate_name]]
+        print 'inside test_python_mysql_query():'
+        # query returns [{'id':6}]
+        print conn.query(q, *qparas)
         self.assertTrue(conn.query(q, *qparas))
 
     def test_python_mysql_insert(self):
+        """insert返回插入记录的id
+        delete返回是否执行成功
+        """
         conn = Connection(dbHOST, dbNAME, dbUSER, dbPASSWORD)
-        print 'id is',conn.insert("roles", name='Test', default=0, permissions=0)
+        print 'inside test_python_mysql_insert():'
+        # insert returns 13
+        print 'id is', conn.insert("roles", name='Test', default=0, permissions=0)
         q = "DELETE FROM `roles` WHERE permissions = 0"
+        # delete returns 0
         print conn.execute(q)
         conn.commit()
 
     def test_readfromfile_and_writeintofile(self):
-
+        print 'inside test_readfromfile_and_writeintofile():'
         names = open(NAMES_PATH, 'r')  # w+是先清空文件内容再操作
         for catename_worktitle in names.readlines():
             cate_name = catename_worktitle.strip('\n').split(':')[0]

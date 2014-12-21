@@ -6,28 +6,34 @@
 
 {% block body %}
     <div class="col-md-8">
+        <div class="users-selector col-xs-12 col-lg-12">
+            <a class="all {% if not user_id %}on{% endif %}" href="{{ url_for('site.comments') }}">全部</a>
+            {% for user in users %}
+                <a class="user {% if user.id == user_id %}on{% endif %}" href="{{ url_for('site.comments', user_id=user.id) }}">{{ user.username }}</a>
+            {% endfor %}
+        </div>
         <div class="comments-wap">
             {% if not comments.items %}
                 暂无
+            {% else %}
+                {% for comment in comments.items %}
+                    <div class="comment-item">
+                        <div class="comment-content">
+                            {{ comment.content | markdown | safe }}
+                        </div>
+                        <div class="comment-info">
+                            <li class="comment-username"><a href="{{ url_for('site.user', id=comment.user_id) }}" target="_blank">{{ comment.user.username | ismyself | normalize }}</a></li>
+                            <li>&nbsp;</li>
+                            <li class="comment-created">{{ moment(comment.created).fromNow(refresh=True) }}</li>
+                            <li>&nbsp;</li>
+                            <li class="comment-workname">《<a href="{{ url_for('site.work', work_id=comment.work.id) }}" target="_blank">{{ comment.work.title }}</a>》</li>
+                        </div>
+                    </div>
+                    <hr/>
+                {% endfor %}
             {% endif %}
-            {% for comment in comments.items %}
-                <div class="comment-item">
-                    <div class="comment-content">
-                        {{ comment.content | markdown | safe }}
-                    </div>
-                    <div class="comment-info">
-                        <li class="comment-username"><a href="{{ url_for('site.user', id=comment.user_id) }}" target="_blank">{{ comment.user.username | ismyself | normalize }}</a></li>
-                        <li>&nbsp;</li>
-                        <li class="comment-created">{{ moment(comment.created).fromNow(refresh=True) }}</li>
-                        <li>&nbsp;</li>
-                        <li class="comment-workname">《<a href="{{ url_for('site.work', work_id=comment.work.id) }}" target="_blank">{{ comment.work.title }}</a>》</li>
-
-                    </div>
-                </div>
-                <hr/>
-            {% endfor %}
-            {{ pagination(comments) }}
         </div>
+        {{ pagination(comments) }}
     </div>
 {% endblock %}
 

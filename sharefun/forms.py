@@ -59,4 +59,4 @@ class WorkForm(Form):
 class CommentForm(Form):
 
     content = TextAreaField(
-        '内容', description='知道啥说啥,支持吐槽,此框可拖大,支持markdown', validators=[DataRequired('评论内容不能为空')])
+        '内容', description='知道啥说啥,支持吐槽,鼠标移到右下角点击移动拖大此框,支持markdown', validators=[DataRequired('评论内容不能为空')])

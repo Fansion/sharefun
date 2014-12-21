@@ -6,8 +6,8 @@
 
 {% block body %}
     <div class="col-md-8">
-        <div class="users-selector col-xs-12 col-lg-12">
-            <a class="all {% if not user_id %}on{% endif %}" href="{{ url_for('site.comments') }}">全部</a>
+        <div class="users-selector">
+            <a class="user all {% if not user_id %}on{% endif %}" href="{{ url_for('site.comments') }}">全部</a>
             {% for user in users %}
                 <a class="user {% if user.id == user_id %}on{% endif %}" href="{{ url_for('site.comments', user_id=user.id) }}">{{ user.username }}</a>
             {% endfor %}

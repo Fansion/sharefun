@@ -5,7 +5,7 @@ __author__ = 'frank'
 
 from flask.ext.script import Manager, Shell
 from sharefun import app
-from sharefun.models import db, User, Role, Permission, Category, Status
+from sharefun.models import db, User, Role, Permission, Category, Status, Genre, Work
 from flask.ext.migrate import Migrate, MigrateCommand
 
 
@@ -16,7 +16,7 @@ manager.add_command('db', MigrateCommand)
 
 
 def make_context():
-    return dict(app=app, db=db, User=User, Role=Role, Category=Category, Status=Status, Permission=Permission)
+    return dict(app=app, db=db, User=User, Role=Role, Category=Category, Status=Status, Permission=Permission, Genre=Genre, Work=Work)
 manager.add_command("shell", Shell(make_context=make_context))
 
 

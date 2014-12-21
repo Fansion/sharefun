@@ -37,3 +37,6 @@ migrations/*
 
 # test
 sharefun/test.py
+
+# others
+crawlDoubanBackup.py

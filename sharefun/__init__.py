@@ -38,9 +38,16 @@ def register_jinja(app):
 
     # url generator for pagination
     def url_for_other_page(page):
-        args = request.view_args.copy()
-        args['page'] = page
-        return url_for(request.endpoint, **args)
+        """Generate url for pagination"""
+        view_args = request.view_args.copy()
+        args = request.args.copy().to_dict()
+        combined_args = dict(view_args.items() + args.items())
+        combined_args['page'] = page
+        return url_for(request.endpoint, **combined_args)
+        # same effect
+        # args = request.args.copy()
+        # args['page'] = page
+        # return url_for(request.endpoint, **args)
 
     app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 
@@ -75,6 +82,7 @@ def register_db(app):
     from .models import db
     db.init_app(app)
 
+
 def get_mail_handler():
     import logging
     from logging.handlers import SMTPHandler
@@ -95,6 +103,7 @@ def get_mail_handler():
     '''))
     mail_handler.setLevel(logging.ERROR)
     return mail_handler
+
 
 def register_logger(app):
     """send error log to admin by smtp"""
@@ -129,7 +138,8 @@ def create_app():
     app.jinja_env.filters[
         'statusid_to_statusname'] = filters.statusid_to_statusname
     app.jinja_env.filters['normalize'] = filters.normalize
-    app.jinja_env.filters['engrolename_chinrolename'] = filters.engrolename_chinrolename
+    app.jinja_env.filters[
+        'engrolename_chinrolename'] = filters.engrolename_chinrolename
     app.jinja_env.filters['ismyself'] = filters.ismyself
 
     @app.before_request

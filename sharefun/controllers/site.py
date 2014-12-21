@@ -20,8 +20,10 @@ def index():
     works = Work.query.order_by(Work.cate_id, Work.created.desc())
     newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
     total = Recommendation.query.count()
-    success = Recommendation.query.filter(Recommendation.status_id==3).count()
-    failure = Recommendation.query.filter(Recommendation.status_id==4).count()
+    success = Recommendation.query.filter(
+        Recommendation.status_id == 3).count()
+    failure = Recommendation.query.filter(
+        Recommendation.status_id == 4).count()
     return render_template('site/index.html', works=works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure)
 
 
@@ -45,20 +47,32 @@ def work(work_id):
         return redirect(url_for('site.work', work_id=work.id))
     return render_template('site/work.html', work=work, form=form)
 
+
 @bp.route('/user/<int:id>')
 def user(id):
     user = User.query.get_or_404(id)
-    success_recomms_count = Recommendation.query.filter(Recommendation.user_id==id, Recommendation.status_id==3).count()
-    comments_count = Comment.query.filter(Comment.user_id==id).count()
+    success_recomms_count = Recommendation.query.filter(
+        Recommendation.user_id == id, Recommendation.status_id == 3).count()
+    comments_count = Comment.query.filter(Comment.user_id == id).count()
     return render_template('site/user.html', user=user, success_recomms_count=success_recomms_count, comments_count=comments_count)
 
-@bp.route('/comments', defaults={'page': 1})
-@bp.route('/comments/page/<int:page>')
-def comments(page):
+
+@bp.route('/comments')
+def comments():
     """所有评论页"""
-    comments = Comment.query.order_by(Comment.created.desc()).paginate(
+    user_id = request.args.get('user_id', 0, int)
+    page = request.args.get('page', 1, int)
+    comments = Comment.query.order_by(Comment.created.desc())
+    users = []
+    for comment in comments:
+        user = User.query.filter_by(id=comment.user_id).all()[0]
+        if user and user not in users:
+            users.append(user)
+    if user_id:
+        comments = comments.filter(Comment.user_id == user_id)
+    comments = comments.paginate(
         page, current_app.config['FLASK_COMMENTS_PER_PAGE'], error_out=True)
-    return render_template('site/comments.html', comments=comments)
+    return render_template('site/comments.html', comments=comments, users=users, user_id=user_id)
 
 
 @bp.route('/recommendations')

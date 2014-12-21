@@ -14,7 +14,13 @@
                 <div class="work-info-wap">
                     <h1>{{ work.title }}</h1>
                     <p class='score'>{{ work.score }}分</p>
-                    <p class='genre'>{{ work.genre }}</p>
+                    <p class='genre'>
+                        {% for genre_name,genre_id in genres.iteritems() %}
+                            <a href="{{ url_for('site.index', genre_id=genre_id) }}">
+                                {{ genre_name }}
+                            </a>
+                        {% endfor %}
+                    </p>
                     <p class="introducer">由<a href="{{ url_for('site.user', id=work.recommendation.user.id) }}" target="_blank">{{ work.recommendation.user.username | ismyself | normalize }}</a>推荐</p>
                 </div>
             </div>

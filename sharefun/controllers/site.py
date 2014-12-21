@@ -47,6 +47,9 @@ def work(work_id):
     """详情页"""
     form = CommentForm()
     work = Work.query.get_or_404(work_id)
+    genres = {}
+    for genre in work.genres:
+        genres[genre.name] = genre.id
     if form.validate_on_submit() and current_user.is_authenticated():
         content = form.content.data.strip()
         comment = Comment(
@@ -54,7 +57,7 @@ def work(work_id):
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('site.work', work_id=work.id))
-    return render_template('site/work.html', work=work, form=form)
+    return render_template('site/work.html', work=work, form=form, genres=genres)
 
 
 @bp.route('/user/<int:id>')

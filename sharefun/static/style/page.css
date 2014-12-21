@@ -221,11 +221,14 @@ html body #links li {
   margin-bottom: 8px;
   padding-bottom: 10px;
 }
+#page-index .genres-selector,
 #page-comments .users-selector {
   margin-bottom: 20px;
 }
+#page-index .genre,
+#page-index .genre.all,
 #page-comments .user,
-#page-comments .all {
+#page-comments .user.all {
   background-color: #eee;
   color: #333;
   font-size: 12px;
@@ -236,11 +239,12 @@ html body #links li {
   margin: 0 8px 12px 0;
   padding: 5px 7px;
 }
-#page-comments .all.on,
+#page-index .genre.on,
 #page-comments .user.on {
   background-color: #2a99c2;
   color: white;
 }
+#page-index .genre:hover,
 #page-comments .user:hover {
   background-color: #ddd;
 }
@@ -249,7 +253,7 @@ html body #links li {
 }
 #page-comments .comment-item .comment-content,
 #page-user .comment-item .comment-content {
-  /*line-height: 100%;*/
+  line-height: 100%;
   font-size: 20px;
 }
 #page-comments .comment-item .comment-info,

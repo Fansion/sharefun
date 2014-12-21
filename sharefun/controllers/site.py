@@ -6,7 +6,7 @@ from flask import render_template, Blueprint, redirect, url_for, request, flash,
 from flask.ext.login import current_user
 
 from ..forms import WorkForm, CommentForm
-from ..models import db, Category, Work, Comment, Recommendation, Status, User
+from ..models import db, Category, Work, Comment, Recommendation, Status, User, Genre
 
 import os
 from datetime import datetime
@@ -17,14 +17,23 @@ bp = Blueprint('site', __name__)
 @bp.route('/')
 def index():
     """首页"""
+    genre_id = request.args.get('genre_id', 0, int)
+    page = request.args.get('page', 1, int)
     works = Work.query.order_by(Work.cate_id, Work.created.desc())
+    genres = Genre.query.all()
+    if genre_id:
+        # use join
+        works = works.join(Genre.works).filter(Genre.id == genre_id)
+
     newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
     total = Recommendation.query.count()
     success = Recommendation.query.filter(
         Recommendation.status_id == 3).count()
     failure = Recommendation.query.filter(
         Recommendation.status_id == 4).count()
-    return render_template('site/index.html', works=works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure)
+    works = works.paginate(
+        page, current_app.config['FLASK_WORKS_PER_PAGE'], error_out=True)
+    return render_template('site/index.html', works=works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure, genres=genres, genre_id=genre_id, page=page)
 
 
 @bp.route('/about')

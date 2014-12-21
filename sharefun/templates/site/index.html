@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "macro/common.html" import pagination %}
 
 {% block page_title %}享乐-首页{% endblock %}
 {% block page_id %}page-index{% endblock %}
@@ -15,11 +16,17 @@
                     {{ message }}
                 </div>
             {% endfor %}
+            <div class="genres-selector">
+                <a href="{{ url_for('site.index') }}" class="genre all {% if not genre_id %}on{% endif %} ">全部</a>
+                {% for genre in genres %}
+                    <a href="{{ url_for('site.index', genre_id=genre.id) }}" class="genre {% if genre.id == genre_id %}on{% endif %}">{{ genre.name }}</a>
+                {% endfor %}
+            </div>
              <div class='works-wap'>
-                {% if works.count() == 0 %}
+                {% if not works.items %}
                     暂无
                 {% endif %}
-                {% for work in works %}
+                {% for work in works.items %}
                     <div class='work-item'>
                         <a href="{{ url_for('site.work', work_id=work.id) }}">
                             {% if work.cate_id == 1 %}
@@ -31,6 +38,7 @@
                     </div>
                 {% endfor%}
             </div>
+            {{ pagination(works) }}
         </div>
         <div class='col-md-3'>
              <div class="statistics">

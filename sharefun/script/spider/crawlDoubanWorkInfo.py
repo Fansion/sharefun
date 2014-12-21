@@ -124,8 +124,7 @@ def crawlMovieInfo(cate_name, title, director, author, genre, score, desc, url, 
     if soup.find_all("span", property="v:genre"):
         vgenres = soup.find_all("span", property="v:genre")
         for vgenre in vgenres:
-            genre += vgenre.get_text().encode('utf-8') + '/'
-        genre = genre.rstrip('/')
+            genre.append(vgenre.get_text().encode('utf-8'))
 
     if soup.find("span", "all hidden"):
         desc = soup.find("span", "all hidden").get_text().replace('newline', '<br/>').encode(
@@ -158,7 +157,7 @@ def getWorkinfo(cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH):
     title = work_title
     director = ''
     author = ''
-    genre = ''
+    genre = []      # 返回该作品的类型元组，值为中文
     score = 0
     desc = ''
     url = ''
@@ -187,7 +186,21 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
                 " where title = %s and cate_id = %s"        # 此处只有where从句中的变量能用%s
             qparas = [title, CATENAME_TO_CATEID[cate_name]]
             if not conn.query(q, *qparas):
-                wid = conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre=genre, score=score, desc=desc, url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
+                wid = conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre='/'.join(genre), score=score, desc=desc, url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
+                for g in genre:
+                    q = "select id from " + dbGENRESNAME + \
+                        " where name = %s "        # 此处只有where从句中的变量能用%s
+                    qparas = [g]
+                    genre_query = conn.query(q, *qparas)
+                    if not genre_query:
+                        # 将具体类型插入genres表
+                        gid = conn.insert(dbGENRESNAME, name=g, cate_id=CATENAME_TO_CATEID[cate_name])
+                    else:
+                        gid = genre_query[0]['id']  # query returns  [{'id': 5L}]
+                    conn.commit()
+                    # 将类型和作品id插入联合表
+                    conn.insert(dbWORK_GENRESNAME, genre_id=gid, work_id=wid)
+
                 u = "update " + dbRECOMMSNAME + \
                     " set status_id = 3, work_id = %s where status_id = 2 and cate_id = %s and name = %s "
                 uparas = [wid, CATENAME_TO_CATEID[cate_name], work_title]

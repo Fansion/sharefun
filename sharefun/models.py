@@ -28,7 +28,8 @@ class Category(db.Model):
         'Work', backref='category', lazy='dynamic', order_by='desc(Work.created)')
 
     recommendations = db.relationship(
-        'Recommendation', backref='category', lazy='dynamic', order_by='desc(Work.created)')
+        'Recommendation', backref='category', lazy='dynamic', order_by='desc(Recommendation.created)')
+    genres = db.relationship('Genre', backref='category', lazy='dynamic')
 
     @staticmethod
     def insert_cates():
@@ -43,6 +44,13 @@ class Category(db.Model):
 
     def __repr__(self):
         return '<Category %s>' % self.name
+
+work_genres = db.Table('work_genres',
+                       db.Column(
+                           'genre_id', db.Integer, db.ForeignKey('genres.id')),
+                       db.Column(
+                           'work_id', db.Integer, db.ForeignKey('works.id'))
+                       )
 
 
 class Work(db.Model):
@@ -65,10 +73,27 @@ class Work(db.Model):
 
     comments = db.relationship(
         'Comment', backref='work', lazy='dynamic', order_by='desc(Comment.created)')
-    recommendation = db.relationship('Recommendation', backref='work', uselist=False)
+    recommendation = db.relationship(
+        'Recommendation', backref='work', uselist=False)
+
+    genres = db.relationship(
+        'Genre', secondary=work_genres, backref=db.backref('works', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return "Work %s" % self.title
+
+
+class Genre(db.Model):
+
+    """类型"""
+    __tablename__ = 'genres'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+
+    cate_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+
+    def __repr__(self):
+        return "Genre %s" % self.name
 
 
 class Comment(db.Model):

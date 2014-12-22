@@ -83,10 +83,11 @@ html body #links li {
   border-radius: 3px;
 }
 #page-index .work-item .title {
-  margin-bottom: 5px;
+  margin-bottom: 1px;
   color: #333;
 }
-#page-index .work-item .director {
+#page-index .work-item .director,
+#page-index .work-item .author {
   font-size: 13px;
   color: #aaa;
 }
@@ -135,14 +136,11 @@ html body #links li {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
   border-radius: 3px;
 }
-#page-work .work-header .work-info-wap {
-  overflow: hidden;
-}
-#page-work .work-header .work-info-wap .score {
-  color: gray;
-}
-#page-work .work-header .work-info-wap .genre,
+#page-work .work-header .work-info-wap .score,
 #page-work .work-header .work-info-wap .genre a,
+#page-work .work-header .work-info-wap .author,
+#page-work .work-header .work-info-wap .director,
+#page-work .work-header .work-info-wap .introducer,
 #page-work .work-header .work-info-wap .introducer a {
   color: gray;
 }
@@ -311,7 +309,8 @@ html body #links li {
   margin-bottom: 5px;
   color: #333;
 }
-#page-user .work-item .director {
+#page-user .work-item .director,
+#page-user .work-item .author {
   font-size: 13px;
   color: #aaa;
 }

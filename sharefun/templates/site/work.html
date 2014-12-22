@@ -23,6 +23,11 @@
                             </a>
                         {% endfor %}
                     </p>
+                    {% if work.cate_id == 1 %}
+                        <p class='director'>{{ work.director }}</p>
+                    {% elif work.cate_id == 2 %}
+                        <p class='author'>{{ work.author }}</p>
+                    {% endif %}
                     <p class="introducer">由<a href="{{ url_for('site.user', id=work.recommendation.user.id) }}" target="_blank">{{ work.recommendation.user.username | ismyself | normalize }}</a>推荐</p>
                 </div>
             </div>

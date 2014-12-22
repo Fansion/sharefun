@@ -72,6 +72,13 @@
         {{ field }}
     </span>
 {% endmacro %}
+{% macro recommendation_to_work(field)  %}
+    {% if field.cate_id %}
+        <a href="{{ url_for('site.work', work_id=field.cate_id) }}">
+            {{ field.name }}
+        </a>
+    {% endif %}
+{% endmacro %}
 
 {% macro generate_table(t, recommendations) %}
     <h2>{{ t }}</h2>
@@ -97,31 +104,33 @@
                     {% if recommendation.status_id == 1 %}
                         <td>
                             <span class="larger label label-default">
-                                {{ recommendation.name }}
+                                {{ recommendation_to_work(recommendation) }}
                             </span>
                         </td>
                     {% elif recommendation.status_id == 2 %}
                         <td>
                             <span class="larger label label-info">
-                                {{ recommendation.name }}
+                                {{ recommendation_to_work(recommendation) }}
                             </span>
                         </td>
                     {% elif recommendation.status_id == 3 %}
                         <td>
                             <span class="larger label label-success">
-                                {{ recommendation.name }}
+                                {{ recommendation_to_work(recommendation) }}
                             </span>
                         </td>
                     {% elif recommendation.status_id == 4 %}
                         <td>
                             <span class="larger label label-danger">
-                                {{ recommendation.name }}
+                                {{ recommendation_to_work(recommendation) }}
                             </span>
                         </td>
                     {% else %}
-                        <td class="larger">{{ recommendation.name }}</td>
+                        <td class="larger">
+                            {{ recommendation_to_work(recommendation) }}
+                        </td>
                     {% endif %}
-                    <td>{{ label_primary(recommendation.cate_id | cateid_to_catename) }}</td>
+                    <td><a href="{{ url_for('site.index', cate_id=recommendation.cate_id) }}">{{ label_primary(recommendation.cate_id | cateid_to_catename) }}</a></td>
                     <td><a href="{{ url_for('site.user', id=recommendation.user.id) }}" target="_blank">{{ label_primary(recommendation.user.username | ismyself | normalize) }}</a></td>
                     <td>{{ label_primary(recommendation.recomm_reason | normalize) }}</td>
                     <td><span class="label label-primary">{{ moment(recommendation.created).fromNow(refresh=True) }}</span></td>

@@ -194,6 +194,9 @@ html body #links li {
 .larger {
   font-size: 15px;
 }
+.larger a {
+  color: white;
+}
 .navbar-brand {
   font-size: 30px;
 }

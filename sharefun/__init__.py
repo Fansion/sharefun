@@ -34,7 +34,8 @@ def register_jinja(app):
     # inject vars into template context
     @app.context_processor
     def inject_vars():
-        return dict(Permission=permissions.Permission)
+        from .models import Category
+        return dict(Permission=permissions.Permission, categories=Category.query.all())
 
     # url generator for pagination
     def url_for_other_page(page):

@@ -35,14 +35,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('site.index') }}">享乐
+            <a class="navbar-brand" href="{{ url_for('site.about') }}">享乐
                 <small class="small">享你所乐</small>
             </a>
         </div>
         <div class="collapse navbar-collapse my-navbar-collapse">
             <ul class="nav navbar-nav">
-                {# <li><a href="{{ url_for('site.index') }}">分类</a></li> #}
-                <li><a href="{{ url_for('site.about') }}">关于</a></li>
+                {% if categories %}
+                  {% for category in categories %}
+                    <li><a href="{{ url_for('site.index', cate_id=category.id) }}">{{ category.name }}</a></li>
+                  {% endfor %}
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                  {% if current_user.is_authenticated() %}

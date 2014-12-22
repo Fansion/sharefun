@@ -6,7 +6,7 @@ from flask import render_template, Blueprint, redirect, url_for, request, flash,
 from flask.ext.login import current_user
 
 from ..forms import WorkForm, CommentForm
-from ..models import db, Category, Work, Comment, Recommendation, Status, User, Genre
+from ..models import db, Category, Work, Comment, Recommendation, Status, User, Genre, work_genres
 
 import os
 from datetime import datetime
@@ -19,11 +19,16 @@ def index():
     """首页"""
     genre_id = request.args.get('genre_id', 0, int)
     page = request.args.get('page', 1, int)
-    works = Work.query.order_by(Work.cate_id, Work.created.desc())
-    genres = Genre.query.all()
+    cate_id = request.args.get('cate_id', 1, int)
+    works = Work.query.filter_by(cate_id=cate_id).order_by(Work.created.desc())
+    # 按照类型对应的作品数对类型排序
+    from sqlalchemy import func
+    genres = [genre for genre, count in db.session.query(Genre, func.count(work_genres.c.work_id).label(
+        'total')).filter_by(cate_id=cate_id).join(work_genres).group_by(Genre).order_by('total desc').all()]
     if genre_id:
         # use join
-        works = works.join(Genre.works).filter(Genre.id == genre_id)
+        # works = works.join(Genre.works).filter(Genre.id == genre_id)
+        works = works.filter(Work.genres.any(id=genre_id))
 
     newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
     total = Recommendation.query.count()
@@ -75,11 +80,11 @@ def comments():
     user_id = request.args.get('user_id', 0, int)
     page = request.args.get('page', 1, int)
     comments = Comment.query.order_by(Comment.created.desc())
-    users = []
-    for comment in comments:
-        user = User.query.filter_by(id=comment.user_id).all()[0]
-        if user and user not in users:
-            users.append(user)
+    # 只显示有评论的user
+    users = [user for user in User.query.all() if user.comments.count()]
+    # 按照评论数量倒序对user排序
+    users = sorted(
+        users, lambda u1, u2: cmp(u1.comments.count(), u2.comments.count()), reverse=True)
     if user_id:
         comments = comments.filter(Comment.user_id == user_id)
     comments = comments.paginate(

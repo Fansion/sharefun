@@ -38,7 +38,7 @@ def index():
         Recommendation.status_id == 4).count()
     works = works.paginate(
         page, current_app.config['FLASK_WORKS_PER_PAGE'], error_out=True)
-    return render_template('site/index.html', works=works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure, genres=genres, genre_id=genre_id, page=page)
+    return render_template('site/index.html', works=works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure, genres=genres, genre_id=genre_id, page=page, cate_id=cate_id)
 
 
 @bp.route('/about')

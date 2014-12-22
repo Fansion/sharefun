@@ -51,7 +51,7 @@ def crawlMovieInfo(cate_name, title, director, author, genre, score, desc, url, 
     """抓取电影信息"""
     search_url = SEARCH_URL_PATTERN.replace(
         '{cate_name}', CATENAME_CHIN_TO_ENG[cate_name]).replace('{work_title}', title)
-
+    print search_url
     works_page = ''
     work_search_page_path = os.path.join(
         WEBPAGES_PATH,  CATENAME_CHIN_TO_ENG[cate_name] + '_' + title + '_search_page.html')
@@ -146,7 +146,107 @@ def crawlMovieInfo(cate_name, title, director, author, genre, score, desc, url, 
 
     # return "\n".join([title, director, author, genre, str(score), desc, url,
     # cover_url, cover_path])
-    # 将图片写进,../../static/covers/X.jpg, 但保存路径时只保存covers/X.jpg, url_for('static'. cover_path)
+    # 将图片写进,../../static/covers/X.jpg, 但保存路径时只保存covers/X.jpg,
+    # url_for('static'. cover_path)
+    return title, director, author, genre, score, desc, url, cover_url, cover_path[cover_path.find('static/') + 7:]
+
+
+def crawlBookInfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH):
+    search_url = SEARCH_URL_PATTERN.replace(
+        '{cate_name}', CATENAME_CHIN_TO_ENG[cate_name]).replace('{work_title}', title)
+    works_page = ''
+    work_search_page_path = os.path.join(
+        WEBPAGES_PATH,  CATENAME_CHIN_TO_ENG[cate_name] + '_' + title + '_search_page.html')
+    # 缓存work search 结果web页面
+    if not os.path.exists(work_search_page_path):
+        try:
+            works_page = urlopen(search_url).read()
+            if works_page:
+                work_search_page = open(work_search_page_path, 'w')
+                work_search_page.write(str(works_page))
+                work_search_page.close()
+        except Exception, e:
+            logging.debug('搜索' + title + '失败: ' + search_url)
+            logging.exception(e)
+            raise ConnectionException('搜索' + title + '失败: ' + search_url)
+    else:
+        works_page = urlopen(work_search_page_path).read()
+
+    soup = BeautifulSoup(works_page)
+    subject_items = soup.find_all('li', 'subject-item')
+    if len(subject_items) < 1:                # 系统第一个自带table与搜索结果无关
+        os.remove(work_search_page_path)
+        logging.debug('搜索 ' + title + ' 结果为空')
+        raise EmptyResultException('搜索 ' + title + ' 结果为空')
+
+    url = subject_items[0].find("a", "nbg").get("href")
+    if subject_items[0].find("span", "rating_nums"):
+        score = float(subject_items[0].find("span", "rating_nums").get_text())
+
+    work_page = ''
+    work_home_page_path = os.path.join(
+        WEBPAGES_PATH, CATENAME_CHIN_TO_ENG[cate_name] + '_' + title + '_page.html')
+    # 缓存work web页面
+    if not os.path.exists(work_home_page_path):
+        try:
+            work_page = urlopen(url).read()
+            if work_page:
+                work_home_page = open(work_home_page_path, 'w')
+                work_home_page.write(str(work_page))
+                work_home_page.close()
+        except Exception, e:
+            logging.debug('打开' + title + '主页面失败: ' + url)
+            logging.exception(e)
+            raise ConnectionException('打开' + title + '主页面失败: ' + url)
+    else:
+        work_page = urlopen(work_home_page_path).read()
+
+    # 检查搜索结果是否为目的影片
+    # works_page出现乱码 或者 查询关键字不准确
+    if not title in work_page:
+        os.remove(work_search_page_path)
+        os.remove(work_home_page_path)
+        logging.info('搜索结果不包含 ' + title)
+        raise EmptyResultException('搜索结果不包含 ' + title)
+
+    # .replace('<br />', 'newline')和.replace('newline', '<br/>')
+    # 是为了解决.get_text()只能拿到标签中间的文本直接跳过<br/>的问题
+    soup = BeautifulSoup(work_page)
+    if soup.find("div", id="info"):
+        info = soup.find("div", id="info")
+        pls = info.find_all("span", "pl")
+        links = info.find_all("a")
+        author = links[0].get_text().encode('utf-8')
+
+    genre = []
+    if soup.find("div", id="db-tags-section"):
+        tags = soup.find("div", id="db-tags-section").find_all("a")
+        for tag in tags:
+            if len(genre) > 5:
+                break
+            genre.append(tag.get_text().encode('utf-8'))
+
+    report = soup.find("div", id="link-report")
+    if report.find("span", "all hidden"):
+        ps = report.find("span", "all hidden").find(
+            "div", "intro").find_all("p")
+    else:
+        ps = report.find("div", "intro")
+    desc = ''
+    for p in ps:
+        desc += str(p).strip().strip('<p>').strip('</p>') + '<br/>'
+
+    url_t = url.rstrip('/')
+    work_id = url_t[url_t.rindex('/') + 1:]     # work douban_id
+    # 换中图（mpic小图）
+    cover_url = subject_items[0].find('img').get("src").replace("mpic", "lpic")
+    cover_path = os.path.join(
+        COVERS_FOLDER_PATH, CATENAME_CHIN_TO_ENG[cate_name] + '_' + work_id + '.jpg')
+    if not os.path.exists(cover_path):      # 不存在cover时下载cover
+        if not downloadPic(cover_url, cover_path):
+            logging.info('下载' + title + '封面失败')
+            raise ConnectionException('下载' + title + '封面失败')
+
     return title, director, author, genre, score, desc, url, cover_url, cover_path[cover_path.find('static/') + 7:]
 
 
@@ -166,6 +266,8 @@ def getWorkinfo(cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH):
 
     if cate_name == '电影':
         return crawlMovieInfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH)
+    if cate_name == '图书':
+        return crawlBookInfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH)
 
 
 def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, COVERS_FOLDER_PATH):
@@ -181,12 +283,14 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
         print '-' * 40
         logging.info('-' * 40)
         try:
-            title, director, author, genre, score, desc, url, cover_url, cover_path = getWorkinfo(cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH)
+            title, director, author, genre, score, desc, url, cover_url, cover_path = getWorkinfo(
+                cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH)
             q = "select * from " + dbWORKSNAME + \
                 " where title = %s and cate_id = %s"        # 此处只有where从句中的变量能用%s
             qparas = [title, CATENAME_TO_CATEID[cate_name]]
             if not conn.query(q, *qparas):
-                wid = conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre='/'.join(genre), score=score, desc=desc, url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
+                wid = conn.insert(dbWORKSNAME, title=title, director=director, author=author, genre='/'.join(genre), score=score, desc=desc,
+                                  url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
                 for g in genre:
                     q = "select id from " + dbGENRESNAME + \
                         " where name = %s "        # 此处只有where从句中的变量能用%s
@@ -194,9 +298,11 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
                     genre_query = conn.query(q, *qparas)
                     if not genre_query:
                         # 将具体类型插入genres表
-                        gid = conn.insert(dbGENRESNAME, name=g, cate_id=CATENAME_TO_CATEID[cate_name])
+                        gid = conn.insert(
+                            dbGENRESNAME, name=g, cate_id=CATENAME_TO_CATEID[cate_name])
                     else:
-                        gid = genre_query[0]['id']  # query returns  [{'id': 5L}]
+                        # query returns  [{'id': 5L}]
+                        gid = genre_query[0]['id']
                     conn.commit()
                     # 将类型和作品id插入联合表
                     conn.insert(dbWORK_GENRESNAME, genre_id=gid, work_id=wid)
@@ -221,7 +327,8 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
             # 读取文件内容查看该类别作品是否已经抓取失败并记录
             failure.seek(0)
             if cate_name + ':' + work_title not in failure.read():
-                failure.write('UTC+8 ' + str(datetime.datetime.now()) + ':' + cate_name + ':' + work_title + '\n')
+                failure.write(
+                    'UTC+8 ' + str(datetime.datetime.now()) + ':' + cate_name + ':' + work_title + '\n')
             failure.seek(2)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -237,4 +344,5 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
 
 
 if __name__ == '__main__':
-    main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, COVERS_FOLDER_PATH)
+    main(NAMES_PATH, SUCCESSFUL_NAMES_PATH,
+         FAILED_NAMES_PATH, WEBPAGES_PATH, COVERS_FOLDER_PATH)

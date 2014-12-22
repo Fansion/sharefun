@@ -10,6 +10,8 @@
             <div class="work-header">
                 {% if work.cate_id == 1 %}
                     <img class="work-cover img-responsive" src=" {{ url_for('static', filename='%s' % work.cover_path) }} " title="{{ work.title }}" alt="{{ work.title }}">
+                {% elif work.cate_id == 2 %}
+                    <img class="work-cover img-responsive" src="{{ work.cover_url }}" title="{{ work.title }}" alt="{{ work.title }}">
                 {% endif %}
                 <div class="work-info-wap">
                     <h1>{{ work.title }}</h1>
@@ -25,9 +27,7 @@
                 </div>
             </div>
             <h4>简介</h4>
-            {% if work.cate_id == 1 %}
-                <div class='work-desc'>{{ work.desc|safe }}</div>
-            {% endif %}
+            <div class='work-desc'>{{ work.desc|safe }}</div>
             <div class="work-comments">
                 {% if current_user.is_authenticated() %}
                     <div class="write-comment">

@@ -17,9 +17,9 @@
                 </div>
             {% endfor %}
             <div class="genres-selector">
-                <a href="{{ url_for('site.index') }}" class="genre all {% if not genre_id %}on{% endif %} ">全部</a>
+                <a href="{{ url_for('site.index', cate_id=cate_id) }}" class="genre all {% if not genre_id %}on{% endif %} ">全部</a>
                 {% for genre in genres %}
-                    <a href="{{ url_for('site.index', genre_id=genre.id) }}" class="genre {% if genre.id == genre_id %}on{% endif %}">{{ genre.name }}</a>
+                    <a href="{{ url_for('site.index', genre_id=genre.id, cate_id=genre.cate_id) }}" class="genre {% if genre.id == genre_id %}on{% endif %}">{{ genre.name }}</a>
                 {% endfor %}
             </div>
              <div class='works-wap'>
@@ -31,9 +31,11 @@
                         <a href="{{ url_for('site.work', work_id=work.id) }}">
                             {% if work.cate_id == 1 %}
                                 <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % work.cover_path) }}" title="{{ work.title }}" alt="{{ work.title }}">
+                            {% elif work.cate_id == 2 %}
+                                <img class="cover img-responsive" src="{{ work.cover_url }}" title="{{ work.title }}" alt="{{ work.title }}">
                             {% endif %}
                             <p class='title'>{{ work.title }}</p>
-                            <p class='director'>{{ work.director }}</p>
+                            <p class='director'>{{ work.author }}</p>
                         </a>
                     </div>
                 {% endfor%}

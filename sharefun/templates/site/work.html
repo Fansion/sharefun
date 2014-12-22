@@ -31,7 +31,7 @@
                     <p class="introducer">由<a href="{{ url_for('site.user', id=work.recommendation.user.id) }}" target="_blank">{{ work.recommendation.user.username | ismyself | normalize }}</a>推荐</p>
                 </div>
             </div>
-            <h4>简介</h4>
+            <h4>[简介]</h4>
             <div class='work-desc'>{{ work.desc|safe }}</div>
             <div class="work-comments">
                 {% if current_user.is_authenticated() %}
@@ -69,12 +69,6 @@
                     </div>
                 {% endif %}
             </div>
-<!-- 多说评论框 start -->
-            {# <h4>多说评论</h4> #}
-            {# <hr/> #}
-            {# <div class="ds-thread" data-thread-key="请将此处替换成文章在你的站点中的ID" data-title="请替换成文章的标题" data-url="请替换成文章的网址"></div> #}
-            {# <div class="ds-thread" data-thread-key="{{ work.id }}" data-title="{{ work.title }}" data-url="{{ url_for('site.work', work_id=work.id) }}"></div> #}
-<!-- 多说评论框 end -->
         </div>
         <div class='col-md-4'>
              <div class='work-douban-link'>
@@ -87,18 +81,5 @@
         </div>
     </div>
 
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-var duoshuoQuery = {short_name:"ifanan"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-</script>
-<!-- 多说公共JS代码 end -->
 {% endblock %}
 

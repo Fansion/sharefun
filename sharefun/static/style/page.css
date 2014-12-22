@@ -67,7 +67,6 @@ html body #links li {
 }
 #page-index .work-item {
   display: inline-block;
-/*  vertical-align: top;*/
   margin-bottom: 20px;
   margin-right: 40px;
   width: 130px;
@@ -103,8 +102,6 @@ html body #links li {
   margin-bottom: 8px;
   padding-bottom: 8px;
   border-bottom: 1px dashed #ddd;
-}
-#page-index .comments-section .comments-wap{
 }
 #page-index .comments-section .comment-item {
   margin-bottom: 8px;
@@ -313,5 +310,8 @@ html body #links li {
 #page-user .work-item .author {
   font-size: 13px;
   color: #aaa;
+}
+#page-about .duoshuo {
+  margin-top: 70px;
 }
 

@@ -21,7 +21,7 @@
                                         {% if recomm.work.cate_id == 1 %}
                                             <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % recomm.work.cover_path) }}" title="{{ recomm.work.title }}" alt="{{ recomm.work.title }}">
                                         {% elif recomm.work.cate_id == 2 %}
-                                            <img class="work-cover img-responsive" src="{{ recomm.work.cover_url }}" title="{{ recomm.work.title }}" alt="{{ recomm.work.title }}">
+                                            <img class="cover img-responsive" src="{{ recomm.work.cover_url }}" title="{{ recomm.work.title }}" alt="{{ recomm.work.title }}">
                                         {% endif %}
                                         <p class='title'>{{ recomm.work.title }}</p>
                                         {% if recomm.work.cate_id == 1 %}

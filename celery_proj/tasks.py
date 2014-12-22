@@ -4,10 +4,9 @@ from __future__ import absolute_import
 from celery_proj.celery import app
 
 from sharefun import create_app
-from sharefun.models import db, Recommendation, User
+from sharefun.models import db, Recommendation, User, Category
 from sharefun.script.spider.crawlDoubanWorkInfo import main
 from sharefun.config import load_config
-from sharefun.filters import cateid_to_catename
 from sharefun import get_mail_handler
 
 import os
@@ -24,8 +23,7 @@ def crawller():
     flask_app = create_app()
     with flask_app.app_context():
         for recommendation in Recommendation.query.filter_by(status_id=2):
-            names_file.write(
-                cateid_to_catename(recommendation.cate_id) + ':' + recommendation.name + '\n')
+            names_file.write(recommendation.category.name + ':' + recommendation.name + '\n')
     names_file.close()
 
     main(config.NAMES_PATH, config.SUCCESSFUL_NAMES_PATH,

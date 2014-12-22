@@ -135,9 +135,6 @@ def create_app():
     register_moment(app)
 
     app.jinja_env.filters['markdown'] = filters.markdown
-    app.jinja_env.filters['cateid_to_catename'] = filters.cateid_to_catename
-    app.jinja_env.filters[
-        'statusid_to_statusname'] = filters.statusid_to_statusname
     app.jinja_env.filters['normalize'] = filters.normalize
     app.jinja_env.filters[
         'engrolename_chinrolename'] = filters.engrolename_chinrolename

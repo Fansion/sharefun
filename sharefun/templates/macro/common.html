@@ -73,10 +73,12 @@
     </span>
 {% endmacro %}
 {% macro recommendation_to_work(field)  %}
-    {% if field.cate_id %}
-        <a href="{{ url_for('site.work', work_id=field.cate_id) }}">
+    {% if field.work_id %}
+        <a href="{{ url_for('site.work', work_id=field.work_id) }}">
             {{ field.name }}
         </a>
+    {% else %}
+            {{ field.name }}
     {% endif %}
 {% endmacro %}
 

@@ -17,9 +17,9 @@
                     <h1>{{ work.title }}</h1>
                     <p class='score'>{{ work.score }}分</p>
                     <p class='genre'>
-                        {% for genre_name,genre_id in genres.iteritems() %}
-                            <a href="{{ url_for('site.index', genre_id=genre_id) }}">
-                                {{ genre_name }}
+                        {% for genre in genres %}
+                            <a href="{{ url_for('site.index', genre_id=genre.id, cate_id=genre.cate_id) }}">
+                                {{ genre.name }}
                             </a>
                         {% endfor %}
                     </p>

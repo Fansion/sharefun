@@ -52,9 +52,9 @@ def work(work_id):
     """详情页"""
     form = CommentForm()
     work = Work.query.get_or_404(work_id)
-    genres = {}
+    genres = []
     for genre in work.genres:
-        genres[genre.name] = genre.id
+        genres.append(genre)
     if form.validate_on_submit() and current_user.is_authenticated():
         content = form.content.data.strip()
         comment = Comment(

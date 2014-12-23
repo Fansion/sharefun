@@ -38,10 +38,11 @@ def send_mail():
         today = str(datetime.now()).split(' ')[0] + ' 00:00:00.000000'
         for user in User.query.filter(User.created > today):
             info += user.email + '\n'
-    import logging
-    logger = logging.getLogger('sf')
-    logger.addHandler(get_mail_handler())
-    logger.error(info)
+    if info != '新注册用户:\n':
+        import logging
+        logger = logging.getLogger('sf')
+        logger.addHandler(get_mail_handler())
+        logger.error(info)
 
 
 @app.task

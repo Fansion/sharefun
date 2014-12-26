@@ -29,11 +29,7 @@
                         <p class='author'>{{ work.author }}</p>
                     {% endif %}
                 </div>
-{#                 <div class="paging">
-                    <p class="pre">上一页</p>
-                    <p class="next">下一页</p>
-                </div>
-#}            </div>
+            </div>
             <div class="intro-info-wap">
                 {% if work.recommendation.user %}
                     <p class="introducer">推荐人：<a href="{{ url_for('site.user', id=work.recommendation.user.id) }}" target="_blank">{{ work.recommendation.user.username | ismyself | normalize }}</a></p>
@@ -41,6 +37,18 @@
                 {% if work.recommendation.recomm_reason %}
                     <p class="recomm_reason">推荐词：{{ work.recommendation.recomm_reason }}</p>
                 {% endif %}
+            </div>
+            <div class="paging">
+                <div class="prev">
+                    {% if prev %}
+                        <p class="pre"><a href="{{ url_for('site.work', work_id=prev.id) }}">{{ prev.title }}></a></p>
+                    {% endif %}
+                </div>
+                <div class="next">
+                    {% if next %}
+                        <p class="next"><a href="{{ url_for('site.work', work_id=next.id) }}">>{{ next.title }}</a></p>
+                    {% endif %}
+                </div>
             </div>
             <div class='work-desc'>
                 <h4>[简介]</h4>

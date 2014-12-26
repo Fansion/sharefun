@@ -123,6 +123,9 @@ html body #links li {
   line-height: 100%;
   display: inline-block;
 }
+#page-work a {
+  color: gray;
+}
 #page-work .work-header {
   margin-bottom: 55px;
 }
@@ -134,16 +137,13 @@ html body #links li {
   border-radius: 3px;
 }
 #page-work .work-header .work-info-wap .score,
-#page-work .work-header .work-info-wap .genre a,
 #page-work .work-header .work-info-wap .author,
 #page-work .work-header .work-info-wap .director {
   color: gray;
 }
 #page-work .intro-info-wap .introducer,
-#page-work .intro-info-wap .recomm_reason,
-#page-work .intro-info-wap .introducer a {
+#page-work .intro-info-wap .recomm_reason {
   color: gray;
-  line-height: 80%;
 }
 #page-work .work-desc {
   line-height: 24px;
@@ -153,12 +153,14 @@ html body #links li {
 #page-work .paging {
   margin-top: 20px;
   margin-bottom: 20px;
+  height: 50px;
+  font-size: 18px;
 }
 #page-work .paging .pre {
   float: left;
 }
 #page-work .paging .next {
-  float: right;
+  text-align: right;
 }
 #page-work .work-douban-link a {
   text-decoration: none;

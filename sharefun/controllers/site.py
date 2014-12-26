@@ -54,7 +54,11 @@ def about():
 def work(work_id):
     """详情页"""
     form = CommentForm()
-    work = Work.query.get_or_404(work_id)
+    q = Work.query
+    work = q.get_or_404(work_id)
+    prev = q.filter(Work.id > work_id).order_by(Work.id).first()
+    next = q.filter(Work.id < work_id).order_by(Work.id.desc()).first()
+    print prev,':',next
     genres = []
     for genre in work.genres:
         genres.append(genre)
@@ -65,7 +69,7 @@ def work(work_id):
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('site.work', work_id=work.id))
-    return render_template('site/work.html', work=work, form=form, genres=genres)
+    return render_template('site/work.html', work=work, form=form, genres=genres, prev=prev, next=next)
 
 
 @bp.route('/user/<int:id>')

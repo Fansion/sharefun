@@ -28,7 +28,10 @@ def index():
     if genre_id:
         # use join
         # works = works.join(Genre.works).filter(Genre.id == genre_id)
-        works = works.filter(Work.genres.any(id=genre_id))
+        if genre_id == -1:
+            works = Work.query.order_by(func.rand())
+        else:
+            works = works.filter(Work.genres.any(id=genre_id))
 
     newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
     total = Recommendation.query.count()

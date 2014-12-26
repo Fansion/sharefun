@@ -17,7 +17,8 @@
                 </div>
             {% endfor %}
             <div class="genres-selector">
-                <a href="{{ url_for('site.index', cate_id=cate_id) }}" class="genre all {% if not genre_id %}on{% endif %} ">全部</a>
+                <a href="{{ url_for('site.index') }}" class="genre all {% if not genre_id %}on{% endif %} ">全部</a>
+                <a href="{{ url_for('site.index', genre_id=-1) }}" class="genre random {% if genre_id == -1 %}on{% endif %} ">随机</a>
                 {% for genre in genres %}
                     <a href="{{ url_for('site.index', genre_id=genre.id, cate_id=genre.cate_id) }}" class="genre {% if genre.id == genre_id %}on{% endif %}">{{ genre.name }}</a>
                 {% endfor %}

@@ -136,14 +136,29 @@ html body #links li {
 #page-work .work-header .work-info-wap .score,
 #page-work .work-header .work-info-wap .genre a,
 #page-work .work-header .work-info-wap .author,
-#page-work .work-header .work-info-wap .director,
-#page-work .work-header .work-info-wap .introducer,
-#page-work .work-header .work-info-wap .introducer a {
+#page-work .work-header .work-info-wap .director {
   color: gray;
+}
+#page-work .intro-info-wap .introducer,
+#page-work .intro-info-wap .recomm_reason,
+#page-work .intro-info-wap .introducer a {
+  color: gray;
+  line-height: 80%;
 }
 #page-work .work-desc {
   line-height: 24px;
   margin-bottom: 55px;
+  margin-top: 20px;
+}
+#page-work .paging {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#page-work .paging .pre {
+  float: left;
+}
+#page-work .paging .next {
+  float: right;
 }
 #page-work .work-douban-link a {
   text-decoration: none;

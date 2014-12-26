@@ -28,11 +28,24 @@
                     {% elif work.cate_id == 2 %}
                         <p class='author'>{{ work.author }}</p>
                     {% endif %}
-                    <p class="introducer">由<a href="{{ url_for('site.user', id=work.recommendation.user.id) }}" target="_blank">{{ work.recommendation.user.username | ismyself | normalize }}</a>推荐</p>
                 </div>
+{#                 <div class="paging">
+                    <p class="pre">上一页</p>
+                    <p class="next">下一页</p>
+                </div>
+#}            </div>
+            <div class="intro-info-wap">
+                {% if work.recommendation.user %}
+                    <p class="introducer">推荐人：<a href="{{ url_for('site.user', id=work.recommendation.user.id) }}" target="_blank">{{ work.recommendation.user.username | ismyself | normalize }}</a></p>
+                {% endif %}
+                {% if work.recommendation.recomm_reason %}
+                    <p class="recomm_reason">推荐词：{{ work.recommendation.recomm_reason }}</p>
+                {% endif %}
             </div>
-            <h4>[简介]</h4>
-            <div class='work-desc'>{{ work.desc|safe }}</div>
+            <div class='work-desc'>
+                <h4>[简介]</h4>
+                {{ work.desc|safe }}
+            </div>
             <div class="work-comments">
                 {% if current_user.is_authenticated() %}
                     <div class="write-comment">

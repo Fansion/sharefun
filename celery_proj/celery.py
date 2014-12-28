@@ -24,7 +24,7 @@ app.conf.update(
         },
         'send_mail': {
             'task': 'celery_proj.tasks.send_mail',
-            'schedule': crontab(hour='0', minute=0)
+            'schedule': crontab(hour='23', minute=0)
         },
     }
 )

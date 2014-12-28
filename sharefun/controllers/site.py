@@ -20,7 +20,7 @@ def index():
     genre_id = request.args.get('genre_id', 0, int)
     page = request.args.get('page', 1, int)
     cate_id = request.args.get('cate_id', 1, int)
-    works = Work.query.filter_by(cate_id=cate_id).order_by(Work.created.desc())
+    works = Work.query.filter_by(cate_id=cate_id)
     # 按照类型对应的作品数对类型排序
     from sqlalchemy import func
     genres = [genre for genre, count in db.session.query(Genre, func.count(work_genres.c.work_id).label(
@@ -29,9 +29,11 @@ def index():
         # use join
         # works = works.join(Genre.works).filter(Genre.id == genre_id)
         if genre_id == -1:
-            works = Work.query.order_by(func.rand())
+            works = works.order_by(func.rand())
         else:
-            works = works.filter(Work.genres.any(id=genre_id))
+            works = works.filter(Work.genres.any(id=genre_id)).order_by(Work.created.desc())
+    else:
+        works = works.order_by(Work.created.desc())
 
     newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
     total = Recommendation.query.count()
@@ -58,7 +60,6 @@ def work(work_id):
     work = q.get_or_404(work_id)
     prev = q.filter(Work.id > work_id).order_by(Work.id).first()
     next = q.filter(Work.id < work_id).order_by(Work.id.desc()).first()
-    print prev,':',next
     genres = []
     for genre in work.genres:
         genres.append(genre)

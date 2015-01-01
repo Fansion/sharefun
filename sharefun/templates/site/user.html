@@ -18,16 +18,16 @@
                         {% if recomm.work.id %}
                             <div class='work-item'>
                                     <a href="{{ url_for('site.work', work_id=recomm.work.id) }}">
-                                        {% if recomm.work.cate_id == 1 %}
-                                            <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % recomm.work.cover_path) }}" title="{{ recomm.work.title }}" alt="{{ recomm.work.title }}">
-                                        {% elif recomm.work.cate_id == 2 %}
+                                        {% if recomm.work.cate_id == 2 %}
                                             <img class="cover img-responsive" src="{{ recomm.work.cover_url }}" title="{{ recomm.work.title }}" alt="{{ recomm.work.title }}">
+                                        {% else %}
+                                            <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % recomm.work.cover_path) }}" title="{{ recomm.work.title }}" alt="{{ recomm.work.title }}">
                                         {% endif %}
                                         <p class='title'>{{ recomm.work.title }}</p>
-                                        {% if recomm.work.cate_id == 1 %}
-                                            <p class='director'>{{ recomm.work.director }}</p>
-                                        {% elif recomm.work.cate_id == 2 %}
+                                        {% if recomm.work.cate_id == 2 %}
                                             <p class='author'>{{ recomm.work.author }}</p>
+                                        {% else %}
+                                            <p class='director'>{{ recomm.work.director }}</p>
                                         {% endif %}
                                     </a>
                             </div>

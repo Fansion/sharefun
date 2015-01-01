@@ -59,6 +59,14 @@ def audit_recommenations(recomm_id):
     recommendation = Recommendation.query.get_or_404(recomm_id)
     """审核与真正处理数据中间相隔一定时间，所以将审核通过状态分为通过未上架（默认）和通过已上架，增加删除待审核推荐"""
     if 'hide' in request.form:
+        # 如果对应作品已上架则删除对应的work_genres和work数据，如需要再通过审核重新下载
+        if recommendation.status_id == 3:
+            work = Work.query.filter_by(id=recommendation.work_id).first()
+            genres = work.genres
+            for genre in genres:
+                work.genres.remove(genre)
+            db.session.delete(work)
+            db.session.commit()
         recommendation.status_id = 5      # 设置为隐藏无效状态
     if 'yes' in request.form:
         recommendation.status_id = 2

@@ -56,7 +56,19 @@ class WorkForm(Form):
     recomm_reason4 = TextField('推荐词', description='选填')
     recomm_reason5 = TextField('推荐词', description='选填')
 
+
 class CommentForm(Form):
 
     content = TextAreaField(
         '内容', description='知道啥说啥,支持吐槽,鼠标移到右下角点击移动拖大此框,支持markdown', validators=[DataRequired('评论内容不能为空')])
+
+
+class SingleRecommendationForm(Form):
+
+    name = TextField('作品名称')
+    remarks = TextField('审核备注')
+    recomm_reason = TextField('推荐原因')
+
+    cate_id = SelectField('作品类别',  coerce=int)
+    status_id = SelectField('推荐状态',  coerce=int)
+    user_id = SelectField('推荐人',   coerce=int)

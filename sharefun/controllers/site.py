@@ -31,7 +31,8 @@ def index():
         if genre_id == -1:
             works = works.order_by(func.rand())
         else:
-            works = works.filter(Work.genres.any(id=genre_id)).order_by(Work.created.desc())
+            works = works.filter(Work.genres.any(id=genre_id)).order_by(
+                Work.created.desc())
     else:
         works = works.order_by(Work.created.desc())
 
@@ -105,3 +106,18 @@ def recommendations():
     statusids_recommendations = [
         (s.id, s.recommendations) for s in Status.query.order_by(Status.id)]
     return render_template('site/recommendations.html', statusids_recommendations=statusids_recommendations)
+
+
+@bp.route('/search')
+def search():
+    keyword = request.args.get('keyword')
+    if not keyword:
+        flash('请输入要在本站搜索的作品名称')
+        return redirect(url_for('site.index'))
+    else:
+        works = Work.query.filter(Work.title.like('%' + keyword + '%'))
+        if not works.count():
+            flash('抱歉，本站暂未收录与"' + keyword + '"相关的作品')
+            return redirect(url_for('site.index'))
+        else:
+            return render_template('site/search.html', works=works)

@@ -21,6 +21,7 @@
 .font-ming {
   font-family: "AR PL UMing CN", "AR PL UMing HK", "AR PL UMing TW", "AR PL UMing TW MBE", "PMingLiU", "MingLiU";
 }
+/*layout.html begin*/
 html {
     position: relative;
     min-height: 100%;
@@ -62,6 +63,36 @@ html body #links {
 html body #links li {
   display: inline-block;
 }
+.table {
+  margin-bottom: 50px;
+}
+.larger {
+  font-size: 15px;
+}
+.larger a {
+  color: white;
+}
+.navbar-brand {
+  font-size: 30px;
+}
+.navbar-brand .small{
+  font-size: 10px;
+  color: #999;
+  padding-left: 5px;
+}
+#page-about .about {
+  line-height: 250%;
+}
+#page-404-error .missing {
+  width: 50%;
+  height: 80%;
+}
+.jumbotron p {
+  font-size: 12px;
+  line-height: 100%;
+}
+/*layout.html end*/
+/*page-index.html begin*/
 #page-index .works-wap {
   margin-top: 5px;
 }
@@ -123,6 +154,8 @@ html body #links li {
   line-height: 100%;
   display: inline-block;
 }
+/*page-index.html end*/
+/*page-work.html begin*/
 #page-work a {
   color: gray;
 }
@@ -200,43 +233,10 @@ html body #links li {
   font-size: 10px;
   color: #808080;
 }
-.table {
-  margin-bottom: 50px;
-}
-.larger {
-  font-size: 15px;
-}
-.larger a {
-  color: white;
-}
-.navbar-brand {
-  font-size: 30px;
-}
-.navbar-brand .small{
-  font-size: 10px;
-  color: #999;
-  padding-left: 5px;
-}
-#page-about .about {
-  line-height: 250%;
-}
-#page-404-error .missing {
-  width: 50%;
-  height: 80%;
-}
-.jumbotron p {
-  font-size: 12px;
-  line-height: 100%;
-}
+/*page-work.html end*/
+/*page-comments.html begin*/
 #page-comments .comment-item  {
   margin-bottom: 8px;
-}
-#page-user .comments-wap {
-  margin-top: 40px;
-}
-#page-user .comment-item {
-  margin-bottom: 8px;
-  padding-bottom: 10px;
 }
 #page-index .genres-selector,
 #page-comments .users-selector {
@@ -268,6 +268,13 @@ html body #links li {
 #page-comments .comments-wap {
   margin-top: 20px;
 }
+#page-user .comments-wap {
+  margin-top: 40px;
+}
+#page-user .comment-item {
+  margin-bottom: 8px;
+  padding-bottom: 10px;
+}
 #page-comments .comment-item .comment-content,
 #page-user .comment-item .comment-content {
   line-height: 100%;
@@ -285,7 +292,8 @@ html body #links li {
 #page-user .comment-item .comment-info li {
   display: inline-block;
 }
-
+/*page-comments.html end*/
+/*page-user.html begin*/
 #page-user .user-wap {
   margin-bottom: 100px;
 }
@@ -300,34 +308,42 @@ html body #links li {
   overflow: hidden;
   color: gray;
 }
+#page-search .works-wap,
 #page-user .works-wap {
   margin-top: 40px;
 }
+#page-search .work-item,
 #page-user .work-item {
   display: inline-block;
   margin-bottom: 20px;
   margin-right: 40px;
   width: 130px;
 }
+#page-search .work-item a,
 #page-user .work-item a {
   text-decoration: none;
   color: #333;
 }
+#page-search .work-item .cover,
 #page-user .work-item .cover {
   width: 120px;
   margin-bottom: 12px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
   border-radius: 3px;
 }
+#page-search .work-item .title,
 #page-user .work-item .title {
   margin-bottom: 5px;
   color: #333;
 }
+#page-search .work-item .director,
+#page-search .work-item .author,
 #page-user .work-item .director,
 #page-user .work-item .author {
   font-size: 13px;
   color: #aaa;
 }
+/*page-user.html end*/
 #page-about .duoshuo {
   margin-top: 70px;
 }

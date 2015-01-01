@@ -120,4 +120,4 @@ def search():
             flash('抱歉，本站暂未收录与"' + keyword + '"相关的作品')
             return redirect(url_for('site.index'))
         else:
-            return render_template('site/search.html', works=works)
+            return render_template('site/search.html', works=works, keyword=keyword)

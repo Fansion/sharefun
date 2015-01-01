@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% from "macro/common.html" import field_errors, horizontal_field %}
+
+{% block page_title %}享乐-推荐页
+{% endblock %}
+{% block page_id %}page-recommendation
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <legend>修改推荐页面</legend>
+        <div class='col-md-8'>
+            <form id="form-edit-recommendation" class="form-horizontal" method="POST" action="{{ url_for('admin.edit_recommendation', recomm_id=recommendation.id) }}">
+                <fieldset>
+                    {{ form.csrf_token }}
+
+                    {{ horizontal_field(form.name, length=5) }}
+                    {{ horizontal_field(form.remarks, length=5) }}
+                    {{ horizontal_field(form.recomm_reason, length=5) }}
+
+                    {{ horizontal_field(form.cate_id, length=5) }}
+                    {{ horizontal_field(form.status_id, length=5) }}
+                    {{ horizontal_field(form.user_id, length=5) }}
+
+                    <div class="form-group">
+                        <div class="col-md-3 col-md-offset-2">
+                            <input type="submit" value="提交" class="btn btn-sm btn-primary" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+    </div>
+{% endblock %}

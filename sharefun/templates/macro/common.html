@@ -99,6 +99,9 @@
                 {% if t != '待审核' %}
                     <td>结束时间</td>
                 {% endif %}
+                {% if current_user.is_authenticated() and current_user.is_administrator() %}
+                    <td></td>
+                {% endif %}
             </tr>
             {% for recommendation in recommendations %}
                 <tr>
@@ -137,7 +140,7 @@
                     <td>{{ label_primary(recommendation.remarks | normalize) }}</td>
                     {% if current_user.is_authenticated() and current_user.is_administrator() %}
                         <td>
-                            <form method="post" action="{{ url_for('admin.audit_recommenation', recomm_id=recommendation.id) }}">
+                            <form method="post" action="{{ url_for('admin.audit_recommenations', recomm_id=recommendation.id) }}">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                 <div class="input-group input-group-sm" style="width: 300px;">
                                     <input type="text" name="remarks" class="form-control">
@@ -150,7 +153,12 @@
                                        {% elif recommendation.status_id == 1 %}
                                             <input class="btn btn-default" type="submit" name="yes" value="通过">
                                             <input class="btn btn-default" type="submit" name="no" value="不通过">
+                                       {% endif %}
+
+                                       {% if recommendation.status_id != 5 %}
                                             <input class="btn btn-default" type="submit" name="hide" value="隐藏">
+                                       {% else %}
+                                            <input class="btn btn-default" type="submit" name="yes" value="通过">
                                        {% endif %}
                                     </span>
                                 </div>
@@ -159,6 +167,14 @@
                     {% endif %}
                     {% if recommendation.status_id != 1 %}
                         <td><span class="label label-primary">{{ moment(recommendation.finished).fromNow(refresh=True) }}</span></td>
+                    {% endif %}
+                    {% if current_user.is_authenticated() and current_user.is_administrator() %}
+                        <td>
+                             <form method="get" action="{{ url_for('admin.edit_recommendation', recomm_id=recommendation.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                <input class="btn btn-default" type="submit" name="edit_recommendation" value="修改">
+                             </form>
+                        </td>
                     {% endif %}
                 </tr>
             {% endfor %}

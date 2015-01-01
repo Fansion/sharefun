@@ -2,7 +2,7 @@
 {% from "macro/common.html" import generate_table with context %}
 
 
-{% block page_title %}所有推荐
+{% block page_title %}享乐-所有推荐页
 {% endblock %}
 {% block page_id %}page-recommendations
 {% endblock %}
@@ -21,6 +21,8 @@
             {{ generate_table('审核通过已上架', statusid_recommendation[1]) }}
         {% elif statusid_recommendation[0] == 4 %}
             {{ generate_table('审核不通过', statusid_recommendation[1]) }}
+        {% elif statusid_recommendation[0] == 5 and current_user.is_authenticated() and current_user.is_administrator() %}
+            {{ generate_table('隐藏', statusid_recommendation[1]) }}
         {% endif %}
     {% endfor %}
 {% endblock %}

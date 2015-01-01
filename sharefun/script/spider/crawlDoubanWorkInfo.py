@@ -264,7 +264,7 @@ def getWorkinfo(cate_name, work_title, WEBPAGES_PATH, COVERS_FOLDER_PATH):
     cover_url = ''
     cover_path = ''
 
-    if cate_name == '电影':
+    if cate_name == '电影' or cate_name == '电视剧':
         return crawlMovieInfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH)
     if cate_name == '图书':
         return crawlBookInfo(cate_name, title, director, author, genre, score, desc, url, cover_url, cover_path, WEBPAGES_PATH, COVERS_FOLDER_PATH)
@@ -293,8 +293,8 @@ def main(NAMES_PATH, SUCCESSFUL_NAMES_PATH, FAILED_NAMES_PATH, WEBPAGES_PATH, CO
                                   url=url, cover_url=cover_url, cover_path=cover_path, cate_id=CATENAME_TO_CATEID[cate_name], created=datetime.datetime.utcnow())
                 for g in genre:
                     q = "select id from " + dbGENRESNAME + \
-                        " where name = %s "        # 此处只有where从句中的变量能用%s
-                    qparas = [g]
+                        " where name = %s and cate_id = %s "        # 此处只有where从句中的变量能用%s
+                    qparas = [g, CATENAME_TO_CATEID[cate_name]]
                     genre_query = conn.query(q, *qparas)
                     if not genre_query:
                         # 将具体类型插入genres表

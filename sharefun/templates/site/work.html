@@ -8,10 +8,10 @@
     <div class="row">
         <div class='col-md-8'>
             <div class="work-header">
-                {% if work.cate_id == 1 %}
-                    <img class="work-cover img-responsive" src=" {{ url_for('static', filename='%s' % work.cover_path) }} " title="{{ work.title }}" alt="{{ work.title }}">
-                {% elif work.cate_id == 2 %}
+                {% if work.cate_id == 2 %}
                     <img class="work-cover img-responsive" src="{{ work.cover_url }}" title="{{ work.title }}" alt="{{ work.title }}">
+                {% else %}
+                    <img class="work-cover img-responsive" src="{{ url_for('static', filename='%s' % work.cover_path) }}" title="{{ work.title }}" alt="{{ work.title }}">
                 {% endif %}
                 <div class="work-info-wap">
                     <h1>{{ work.title }}</h1>
@@ -23,10 +23,10 @@
                             </a>
                         {% endfor %}
                     </p>
-                    {% if work.cate_id == 1 %}
-                        <p class='director'>{{ work.director }}</p>
-                    {% elif work.cate_id == 2 %}
+                    {% if work.cate_id == 2 %}
                         <p class='author'>{{ work.author }}</p>
+                    {% else %}
+                        <p class='director'>{{ work.director }}</p>
                     {% endif %}
                 </div>
             </div>

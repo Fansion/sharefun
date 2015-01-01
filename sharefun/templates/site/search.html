@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block page_title %}享乐-搜索页{% endblock %}
+{% block page_id %}page-search{% endblock %}
+
+{% block body %}
+    <div class="row">
+       <div class='col-md-9'>
+           <div class="works-wap">
+                {% if works.count() > 0 %}
+                    <h4>"{{ keyword }}"相关搜索结果({{ works.count() }})</h4>
+                    <hr />
+                    {% for work in works %}
+                        {% if work.id %}
+                            <div class='work-item'>
+                                    <a href="{{ url_for('site.work', work_id=work.id) }}">
+                                        {% if work.cate_id == 1 %}
+                                            <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % work.cover_path) }}" title="{{ work.title }}" alt="{{ work.title }}">
+                                        {% elif work.cate_id == 2 %}
+                                            <img class="cover img-responsive" src="{{ work.cover_url }}" title="{{ work.title }}" alt="{{ work.title }}">
+                                        {% endif %}
+                                        <p class='title'>{{ work.title }}</p>
+                                        {% if work.cate_id == 1 %}
+                                            <p class='director'>{{ work.director }}</p>
+                                        {% elif work.cate_id == 2 %}
+                                            <p class='author'>{{ work.author }}</p>
+                                        {% endif %}
+                                    </a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -35,7 +35,9 @@ def register_jinja(app):
     @app.context_processor
     def inject_vars():
         from .models import Category
-        return dict(Permission=permissions.Permission, categories=Category.query.all())
+        from datetime import date
+        year = date.today().strftime("%Y")
+        return dict(Permission=permissions.Permission, categories=Category.query.all(), year=year)
 
     # url generator for pagination
     def url_for_other_page(page):

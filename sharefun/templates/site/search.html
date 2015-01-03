@@ -20,10 +20,10 @@
                                         <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % work.cover_path) }}" title="{{ work.title }}" alt="{{ work.title }}">
                                     {% endif %}
                                     <p class='title'>{{ work.title }}</p>
-                                        {% if work.cate_id == 1 %}
-                                            <p class='director'>{{ work.director }}</p>
-                                        {% elif work.cate_id == 2 %}
+                                        {% if work.cate_id == 2 %}
                                             <p class='author'>{{ work.author }}</p>
+                                        {% else %}
+                                            <p class='director'>{{ work.director }}</p>
                                         {% endif %}
                                     </a>
                             </div>

@@ -6,7 +6,7 @@ from flask import render_template, Blueprint, redirect, url_for,  flash
 from flask.ext.login import login_required, current_user
 
 from ..forms import WorkForm, CommentForm
-from ..models import db, Category,  Comment, Recommendation
+from ..models import db, Category,  Comment, Recommendation, User
 
 bp = Blueprint('user', __name__)
 
@@ -18,7 +18,6 @@ def secret():
 
 
 @bp.route('/recommend', methods=['GET', 'POST'])
-@login_required
 def recommend():
     form = WorkForm()
     form.cate_id.choices = [(t.id, t.name)
@@ -36,8 +35,13 @@ def recommend():
             if name:
                 # 判断是否存在
                 if not Recommendation.query.filter(Recommendation.cate_id == cate_id).filter(Recommendation.name == name).first():
-                    recommendation = Recommendation(
-                        name=name, cate_id=cate_id, remarks='', user_id=current_user.id, recomm_reason=recomm_reasons[names.index(name)])
+                    if current_user.is_authenticated():
+                        recommendation = Recommendation(
+                            name=name, cate_id=cate_id, remarks='', user_id=current_user.id, recomm_reason=recomm_reasons[names.index(name)])
+                    else:
+                        anonymous_user = User.query.filter_by(username='匿名').first()
+                        recommendation = Recommendation(
+                            name=name, cate_id=cate_id, remarks='', user_id=anonymous_user.id, recomm_reason=recomm_reasons[names.index(name)])
                     db.session.add(recommendation)
                 else:
                     if name not in repeatedNames:
@@ -56,4 +60,6 @@ def recommend():
             return render_template('user/recommend.html', form=form)
         db.session.commit()
         return redirect(url_for('site.recommendations'))
+    if not current_user.is_authenticated():
+        flash('建议先注册，之后再推荐作品！')
     return render_template('user/recommend.html', form=form)

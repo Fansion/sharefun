@@ -239,6 +239,14 @@ class User(UserMixin, db.Model):
             db.session.add(u)
             db.session.commit()
 
+    @staticmethod
+    def insert_anonymous_user():
+        u = User.query.filter_by(username='匿名').first()
+        if u is None:
+            u = User(username='匿名')
+            db.session.add(u)
+            db.session.commit()
+
     def __repr__(self):
         return "User %s" % self.username
 

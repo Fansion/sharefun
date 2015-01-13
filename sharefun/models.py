@@ -243,7 +243,8 @@ class User(UserMixin, db.Model):
     def insert_anonymous_user():
         u = User.query.filter_by(username='匿名').first()
         if u is None:
-            u = User(username='匿名')
+            u = User(email=current_app.config[
+                     'FLASKY_ANONYMOUS'], username='匿名')
             db.session.add(u)
             db.session.commit()
 

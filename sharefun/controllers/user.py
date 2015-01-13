@@ -40,8 +40,15 @@ def recommend():
                             name=name, cate_id=cate_id, remarks='', user_id=current_user.id, recomm_reason=recomm_reasons[names.index(name)])
                     else:
                         anonymous_user = User.query.filter_by(username='匿名').first()
-                        recommendation = Recommendation(
-                            name=name, cate_id=cate_id, remarks='', user_id=anonymous_user.id, recomm_reason=recomm_reasons[names.index(name)])
+                        if anonymous_user:
+                            recommendation = Recommendation(
+                                name=name, cate_id=cate_id, remarks='', user_id=anonymous_user.id, recomm_reason=recomm_reasons[names.index(name)])
+                        else:
+                            u = User(username='匿名')
+                            db.session.add(u)
+                            db.session.commit()
+                            recommendation = Recommendation(
+                                name=name, cate_id=cate_id, remarks='', user_id=u.id, recomm_reason=recomm_reasons[names.index(name)])
                     db.session.add(recommendation)
                 else:
                     if name not in repeatedNames:

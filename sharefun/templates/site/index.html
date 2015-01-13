@@ -64,7 +64,6 @@
                                     <div class="comment-username-created">
                                         <li class="comment-username"><a href="{{ url_for('site.user', id=comment.user_id) }}" target="_blank">{{ comment.user.username | ismyself | normalize }}</a></li>
                                         <li> &nbsp;于&nbsp; </li>
-                                        {# <li>{{ comment.created }}</li> #}
                                         <li>{{ moment(comment.created).fromNow(refresh=True) }}</li>
                                     </div>
                                     <div class="comement-workname">

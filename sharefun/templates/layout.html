@@ -60,7 +60,7 @@
             <ul class="nav navbar-nav navbar-right">
                  <form class="nav navbar-nav navbar-form" role="search" method="get" action="{{ url_for('site.search') }}">
                     <input type="text" name="keyword" class="form-control input-sm"
-                           placeholder="电影名/图书名">
+                           placeholder="电影名/图书名/电视剧名">
                     <button class="btn btn-default btn-sm" type="submit" title="搜索">
                        <span class="fa fa-search"></span>
                     </button>
@@ -70,11 +70,12 @@
                       <li><a href="{{ url_for('admin.audit') }}"><i class="fa fa-pencil"></i>审核</a></li>
                     {% else %}
                       <li><a href="{{ url_for('user.recommend') }}"><i class="fa fa-plus"></i>我要推荐</a></li>
-                      <li><a href="{{ url_for('site.recommendations') }}"><i class="fa fa-list"></i>推荐列表</a></li>
+                      <li><a href="{{ url_for('site.recommendations') }}"><i class="fa fa-list"></i>所有推荐</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('auth.signout') }}"><i class="fa fa-sign-out"></i>登出</a></li>
                  {% else %}
-                    <li><a href="{{ url_for('site.recommendations') }}"><i class="fa fa-list"></i>推荐列表</a></li>
+                    <li><a href="{{ url_for('user.recommend') }}"><i class="fa fa-plus"></i>我要推荐</a></li>
+                    <li><a href="{{ url_for('site.recommendations') }}"><i class="fa fa-list"></i>所有推荐</a></li>
                     <li><a href="{{ url_for('auth.signin') }}"><i class="fa fa-sign-in"></i>登陆</a></li>
                  {% endif %}
             </ul>
@@ -89,13 +90,12 @@
 <div id="footer">
    <div class='container'>
       <div id='copyright'>
-         ShareFun ©2014~{{ year }} by <a href="http://ifanan.com" target="_blank">Frank Fu</a>
+         ShareFun ©2014~{{ year }}
       </div>
 
       <ul id='links'>
          <li>
-            {# <a target="_blank" href="https://github.com/Fansion">独不如众乐乐</a> #}
-            独不如众乐乐
+            <a href="https://github.com/Fansion/sharefun" target="_blank">独不如众乐乐</a>
         　</li>
       </ul>
    </div>

@@ -56,7 +56,8 @@ def category():
     else:
         works = works.order_by(Work.created.desc())
 
-    newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
+    # newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
+    newest_comments = Comment.query.join(Work).filter_by(cate_id=cate_id).limit(5)
     total = Recommendation.query.count()
     success = Recommendation.query.filter(
         Recommendation.status_id == 3).count()

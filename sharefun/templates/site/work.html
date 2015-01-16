@@ -18,7 +18,7 @@
                     <p class='score'>{{ work.score }}分</p>
                     <p class='genre'>
                         {% for genre in genres %}
-                            <a href="{{ url_for('site.index', genre_id=genre.id, cate_id=genre.cate_id) }}">
+                            <a href="{{ url_for('site.category', genre_id=genre.id, cate_id=genre.cate_id) }}">
                                 {{ genre.name }}
                             </a>
                         {% endfor %}

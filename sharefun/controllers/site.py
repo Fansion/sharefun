@@ -17,6 +17,26 @@ bp = Blueprint('site', __name__)
 @bp.route('/')
 def index():
     """首页"""
+    newest_works = []
+    categories = Category.query.order_by(Category.id).all()
+    for category in categories:
+        all_works = Work.query.filter_by(
+            cate_id=category.id).order_by(Work.created.desc()).all()
+        count = len(all_works)
+        works = all_works[:4] if len(all_works) >= 4 else all_works+['']*(4-len(all_works))
+        newest_works.append([category, [count, works]])
+    newest_comments = Comment.query.order_by(Comment.created.desc()).limit(5)
+    total = Recommendation.query.count()
+    success = Recommendation.query.filter(
+        Recommendation.status_id == 3).count()
+    failure = Recommendation.query.filter(
+        Recommendation.status_id == 4).count()
+    return render_template('site/index.html', newest_works=newest_works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure)
+
+
+@bp.route('/category')
+def category():
+    """分类页"""
     genre_id = request.args.get('genre_id', 0, int)
     page = request.args.get('page', 1, int)
     cate_id = request.args.get('cate_id', 1, int)
@@ -26,11 +46,11 @@ def index():
     genres = [genre for genre, count in db.session.query(Genre, func.count(work_genres.c.work_id).label(
         'total')).filter_by(cate_id=cate_id).join(work_genres).group_by(Genre).order_by('total desc').all()]
     if genre_id:
-        # use join
-        # works = works.join(Genre.works).filter(Genre.id == genre_id)
-        if genre_id == -1:
+        if genre_id == -1:  # 随机
             works = works.order_by(func.rand())
         else:
+            # use join
+            # works = works.join(Genre.works).filter(Genre.id == genre_id)
             works = works.filter(Work.genres.any(id=genre_id)).order_by(
                 Work.created.desc())
     else:
@@ -44,7 +64,7 @@ def index():
         Recommendation.status_id == 4).count()
     works = works.paginate(
         page, current_app.config['FLASK_WORKS_PER_PAGE'], error_out=True)
-    return render_template('site/index.html', works=works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure, genres=genres, genre_id=genre_id, page=page, cate_id=cate_id)
+    return render_template('site/category.html', works=works, newest_comments=newest_comments, current_time=datetime.utcnow(), total=total, success=success, failure=failure, genres=genres, genre_id=genre_id, page=page, cate_id=cate_id)
 
 
 @bp.route('/about')

@@ -16,40 +16,36 @@
                     {{ message }}
                 </div>
             {% endfor %}
+            <div class="genres-selector">
+                <a href="{{ url_for('site.category', cate_id=cate_id) }}" class="genre all {% if not genre_id %}on{% endif %} ">全部</a>
+                <a href="{{ url_for('site.category', genre_id=-1, cate_id=cate_id) }}" class="genre random {% if genre_id == -1 %}on{% endif %} ">随机</a>
+                {% for genre in genres %}
+                    <a href="{{ url_for('site.category', genre_id=genre.id, cate_id=genre.cate_id) }}" class="genre {% if genre.id == genre_id %}on{% endif %}">{{ genre.name }}</a>
+                {% endfor %}
+            </div>
              <div class='works-wap'>
-                {% if not newest_works %}
+                {% if not works.items %}
                     暂无
                 {% endif %}
-                {% for category, (count, works) in newest_works %}
-                    <h2>
-                        {{ category.name }}({{ count }})
-                        {% if count > 4 %}
-                            <span class="link-more">
-                                <a href="{{ url_for('site.category', cate_id=category.id) }}">更多»</a>
-                            </span>
-                        {% endif %}
-                    </h2>
-                    {% for work in works %}
-                        {% if work %}
-                            <div class='work-item'>
-                                <a href="{{ url_for('site.work', work_id=work.id) }}">
-                                    {% if work.cate_id == 2 %}
-                                        <img class="cover img-responsive" src="{{ work.cover_url }}" title="{{ work.title }}" alt="{{ work.title }}">
-                                    {% else %}
-                                        <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % work.cover_path) }}" title="{{ work.title }}" alt="{{ work.title }}">
-                                    {% endif %}
-                                    <p class='title'>{{ work.title }}</p>
-                                    {% if work.cate_id == 2 %}
-                                        <p class='author'>{{ work.author }}</p>
-                                    {% else %}
-                                        <p class='director'>{{ work.director }}</p>
-                                    {% endif %}
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                {% for work in works.items %}
+                    <div class='work-item'>
+                        <a href="{{ url_for('site.work', work_id=work.id) }}">
+                            {% if work.cate_id == 2 %}
+                                <img class="cover img-responsive" src="{{ work.cover_url }}" title="{{ work.title }}" alt="{{ work.title }}">
+                            {% else %}
+                                <img class="cover img-responsive" src="{{ url_for('static', filename='%s' % work.cover_path) }}" title="{{ work.title }}" alt="{{ work.title }}">
+                            {% endif %}
+                            <p class='title'>{{ work.title }}</p>
+                            {% if work.cate_id == 2 %}
+                                <p class='author'>{{ work.author }}</p>
+                            {% else %}
+                                <p class='director'>{{ work.director }}</p>
+                            {% endif %}
+                        </a>
+                    </div>
                 {% endfor%}
             </div>
+            {{ pagination(works) }}
         </div>
         <div class='col-md-3'>
              <div class="statistics">

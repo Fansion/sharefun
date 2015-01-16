@@ -53,18 +53,19 @@
             <ul class="nav navbar-nav">
                 {% if categories %}
                   {% for category in categories %}
-                    <li><a href="{{ url_for('site.index', cate_id=category.id) }}">{{ category.name }}</a></li>
+                    <li><a href="{{ url_for('site.category', cate_id=category.id) }}">{{ category.name }}</a></li>
                   {% endfor %}
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
+            <!--
                  <form class="nav navbar-nav navbar-form" role="search" method="get" action="{{ url_for('site.search') }}">
                     <input type="text" name="keyword" class="form-control input-sm"
                            placeholder="电影名/图书名/电视剧名">
                     <button class="btn btn-default btn-sm" type="submit" title="搜索">
                        <span class="fa fa-search"></span>
                     </button>
-                 </form>
+                 </form> -->
                  {% if current_user.is_authenticated() %}
                     {% if current_user.is_administrator() %}
                       <li><a href="{{ url_for('admin.audit') }}"><i class="fa fa-pencil"></i>审核</a></li>

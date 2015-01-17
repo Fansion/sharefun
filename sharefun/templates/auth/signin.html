@@ -9,6 +9,11 @@
 {% block body %}
     <div class="row">
         <legend>登陆页面</legend>
+        <a id='douban-login-icon' href="{{ url_for('auth.douban_pre_signin') }}">
+           <img title="用豆瓣帐号登陆"
+                src="http://img3.douban.com/pics/douban-icons/login_with_douban_32.png"/>
+        </a>
+        <hr />
         <div class='col-md-6'>
             <form id="form-signin" class="form-horizontal" method="POST" action="">
                 <fieldset>

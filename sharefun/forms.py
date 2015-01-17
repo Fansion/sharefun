@@ -72,3 +72,14 @@ class SingleRecommendationForm(Form):
     cate_id = SelectField('作品类别',  coerce=int)
     status_id = SelectField('推荐状态',  coerce=int)
     user_id = SelectField('推荐人',   coerce=int)
+
+
+class SignupForm(Form):
+
+    """Form for send email"""
+    email = TextField('邮箱', [DataRequired(message="邮箱不能为空"), Email(message="无效的邮箱")],
+                      description='你常用的邮箱')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('邮箱已经被注册过，请更换邮箱')

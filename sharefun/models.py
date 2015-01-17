@@ -191,9 +191,13 @@ class User(UserMixin, db.Model):
     """用户"""
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
+    douban_id = db.Column(db.Integer)                            #douban id
     email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=True, index=True)
+    username = db.Column(db.String(64), unique=True, index=True) #douban_username
     password_hash = db.Column(db.String(128))
+    douban_abbr = db.Column(db.String(50))                       #douban uid
+    is_activated = db.Column(db.Boolean, default=False)          #默认不激活，不影响非豆瓣用户
+    is_banned = db.Column(db.Boolean, default=False)             #是否禁用
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

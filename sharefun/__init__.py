@@ -2,13 +2,14 @@
 
 __author__ = 'frank'
 
-from flask import Flask, request, url_for, render_template
+from flask import Flask, request, url_for, render_template, g, session, flash
 from flask_wtf.csrf import CsrfProtect
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager
 from flask.ext.moment import Moment
 
 from . import filters, permissions
+from .utils import signout_user
 from .config import load_config
 
 config = load_config()
@@ -86,6 +87,11 @@ def register_db(app):
     db.init_app(app)
 
 
+def register_mail(app):
+    from .utils import mail
+    mail.init_app(app)
+
+
 def get_mail_handler():
     import logging
     from logging.handlers import SMTPHandler
@@ -118,6 +124,27 @@ def register_moment(app):
     moment = Moment(app)
 
 
+def get_current_user():
+    """获取当前user，同时进行session有效性的检测
+       放在utils.py会造成环路引用
+    """
+    # 豆瓣登陆则不验证邮箱
+    if 'signin_method' in session:
+        return None
+    if not 'user_id' in session:
+        return None
+    # else:
+    #     for k,v in session.iteritems():
+    #         print k,v
+    from .models import User
+    # 此处是user_id而不是douban_id
+    user = User.query.filter(User.id == session['user_id']).first()
+    if not user:
+        signout_user()
+        return None
+    return user
+
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(config)
@@ -135,6 +162,7 @@ def create_app():
     register_logger(app)
     register_login_manager(app)
     register_moment(app)
+    register_mail(app)
 
     app.jinja_env.filters['markdown'] = filters.markdown
     app.jinja_env.filters['normalize'] = filters.normalize
@@ -144,7 +172,14 @@ def create_app():
 
     @app.before_request
     def before_request():
-        pass
+        g.user = get_current_user()
+        if g.user:
+            if not g.user.is_activated:
+                flash('账户尚未激活，请先登陆' + g.user.email + '查收验证邮件并激活账户')
+                signout_user()
+            if g.user.is_banned:
+                flash('账户已被禁用, 请联系管理员')
+                signout_user()
 
     return app
 

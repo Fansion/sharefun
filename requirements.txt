@@ -19,3 +19,4 @@ flower
 fabric
 MySQL-python
 gevent
+requests

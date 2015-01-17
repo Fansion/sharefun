@@ -68,5 +68,5 @@ def recommend():
         db.session.commit()
         return redirect(url_for('site.recommendations'))
     if not current_user.is_authenticated():
-        flash('建议先注册，之后再推荐作品！')
+        flash('建议先注册，之后再推荐作品')
     return render_template('user/recommend.html', form=form)

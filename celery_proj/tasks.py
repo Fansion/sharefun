@@ -103,7 +103,9 @@ def sync_with_douban():
     flask_app = create_app()
     with flask_app.app_context():
         one_hour_ago = datetime.utcnow() + timedelta(hours=-1)
+        print one_hour_ago
         for user in User.query.filter_by(is_activated=1).filter(User.created > one_hour_ago):
+            print user.douban_abbr
             collections_info = requests.get(
                 collections_url % user.douban_abbr).json()
             if collections_info:
@@ -130,15 +132,19 @@ def sync_with_douban():
                         if work:
                             # 已读并豆瓣上评论过
                             if collection['status'] == 'read' and collection['comment']:
-                                comment = Comment.query.filter_by(
-                                    content=collection['comment']).first()
-                                # 该评论没有被抓取
+                                # comment = Comment.query.filter_by(
+                                #     content=collection['comment']).first()
+                                comment = Comment.query.filter_by(user_id=user.id).filter_by(work_id=work.id).first()
+                                # 该评论没有被抓取，则新增评论添加到系统
                                 if not comment:
                                     # 豆瓣上评论时间为utc+8，变为utc+0存到服务器
                                     comment = Comment(
                                         content=collection['comment'], user_id=user.id,  work_id=work.id, created=datetime.strptime(collection['updated'], "%Y-%m-%d %H:%M:%S") + timedelta(hours=-8))
-                                    db.session.add(comment)
-                                    db.session.commit()
+                                else:  #若系统中已经添加了该评论，则直接修改内容
+                                    comment.content = collection['comment']
+                                print comment.content
+                                db.session.add(comment)
+                                db.session.commit()
 
                     for collection in collections:
                         # push comments

@@ -12,13 +12,19 @@ from sharefun import get_mail_handler
 import os
 from subprocess import call
 from datetime import datetime, timedelta
+from urllib import urlretrieve
+import requests
 
 config = load_config()
+
+search_movie_url = "http://api.douban.com/v2/movie/search?q=%s"
+movie_url = "http://api.douban.com/v2/movie/subject/%s"
 
 
 @app.task
 def crawller():
-    """根据最新推荐抓取相应作品信息"""
+    """根据最新推荐抓取相应作品信息
+    """
     names_file = open(config.NAMES_PATH, 'a+')
     flask_app = create_app()
     with flask_app.app_context():
@@ -29,6 +35,38 @@ def crawller():
 
     main(config.NAMES_PATH, config.SUCCESSFUL_NAMES_PATH,
          config.FAILED_NAMES_PATH, config.WEBPAGES_PATH, config.COVERS_FOLDER_PATH)
+
+    with flask_app.app_context():
+        """打补丁
+        目前只发现部分电影信息直接通过crawlDoubanWorkInfo.py无法抓取，需登陆才能在搜索框中搜索到
+        通过豆瓣电影api的方式查询到相关电影信息
+        """
+        for recommendation in Recommendation.query.filter_by(status_id=2):
+            movies_info = requests.get(
+                search_movie_url % recommendation.name).json()
+            if movies_info:
+                subjects = movies_info['subjects']
+                for subject in subjects:
+                    if subject['title'] == recommendation.name:
+                        # 先查到指定电影名称的电影id
+                        movie_id = subject['id']
+                        if movie_id:
+                            # 利用电影id直接通过api查询相关电影信息
+                            movie_info = requests.get(
+                                movie_url % movie_id).json()
+                            cover_path = os.path.join(
+                                os.path.abspath(os.path.dirname(__name__)), 'sharefun/static/covers', 'movie_' + movie_id + '.jpg')
+                            # 下载封面图片
+                            if not os.path.exists(cover_path):
+                                urlretrieve(
+                                    movie_info['images']['large'], cover_path)
+                            work = Work(title=recommendation.name, director=movie_info['directors'][0]['name'], genre='/'.join(movie_info['genres']), score=movie_info['rating'][
+                                'average'], desc=movie_info['summary'], url=movie_info['alt'], cover_url=movie_info['images']['large'], cover_path=cover_path[cover_path.find('static/') + 7:], created=datetime.utcnow(), cate_id=recommendation.cate_id)
+                            db.session.add(work)
+                            recommendation.status_id = 3
+                            db.session.add(recommendation)
+                            db.session.commit()
+                        break
 
 
 @app.task
@@ -54,7 +92,6 @@ def backup():
     call("mysqldump -u%s -p%s --skip-opt --add-drop-table --default-character-set=utf8 --quick sf > %s" %
          (config.DB_USER, config.DB_PASSWORD, os.path.join('/home/frank/sf-backup', f)), shell=True)
 
-import requests
 # 不包括reading，只有read和wish
 collections_url = "https://api.douban.com/v2/book/user/%s/collections"
 collection_url = "https://api.douban.com/v2/book/%s/collection"

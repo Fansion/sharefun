@@ -88,6 +88,13 @@ def douban_signin():
         'code': code
     }
     res = requests.post(url, data=data).json()
+    # 返回access_token类似：
+    # {
+    #   "access_token":"a14afef0f66fcffce3e0fcd2e34f6ff4",
+    #   "expires_in":3920,
+    #   "refresh_token":"5d633d136b6d56a41829b73a424803ec",
+    #   "douban_user_id":"1221"
+    # }
     if 'douban_user_id' not in res:
         return redirect(url_for('site.index'))
 
@@ -129,6 +136,12 @@ def douban_signup():
     # Get user info from douban
     url = "https://api.douban.com/v2/user/%d" % user_id
     user_info = requests.get(url).json()
+
+#     print type(user_info)
+# <type 'dict'>
+#     print user_info
+# {u'loc_id': u'118183', u'name': u'fansion', u'created': u'2011-10-13 01:16:09', u'id': u'55005354', u'is_suicide': False, u'large_avatar': u'http://img3.douban.com/icon/up55005354-2.jpg', u'avatar': u'http://img3.douban.com/icon/u55005354-2.jpg', u'signature': u'\u4f60\u7231\u6216\u4e0d\u7231\uff0c\u5c0f\u7231\u5c31\u5728\u8fd9\u91cc\u3002', u'loc_name': u'\u5b89\u5fbd\u5408\u80a5', u'is_banned': False, u'desc': u'\u4e00\u76f4\u5728\u8def\u4e0a\u3002\n\nBLOG: http://ifanan.com', u'type': u'user', u'alt': u'http://www.douban.com/people/xiaoaifansion/', u'uid': u'xiaoaifansion'}
+
     form = SignupForm()
     if form.validate_on_submit():
         to_addr = form.email.data

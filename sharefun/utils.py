@@ -29,4 +29,5 @@ def signin_user(user, permenent):
 
 def signout_user():
     """Sign in user"""
+    session.pop('signin_method', None)
     session.pop('user_id', None)

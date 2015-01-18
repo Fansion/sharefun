@@ -26,6 +26,10 @@ app.conf.update(
             'task': 'celery_proj.tasks.send_mail',
             'schedule': crontab(hour='23', minute=0)
         },
+        'sync_with_douban': {
+            'task': 'celery_proj.tasks.sync_with_douban',
+            'schedule': crontab(minute=0)
+        },
     }
 )
 

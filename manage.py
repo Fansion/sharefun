@@ -42,11 +42,20 @@ def crawller():
 
 
 @manager.command
+def sync_with_douban():
+    """手动执行抓取评论"""
+    from celery_proj.tasks import sync_with_douban
+
+    sync_with_douban.delay()
+
+
+@manager.command
 def backup():
     """手动备份数据库"""
     from celery_proj.tasks import backup
 
     backup.delay()
+
 
 @manager.command
 def send_mail():

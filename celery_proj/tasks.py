@@ -2,7 +2,6 @@
 from __future__ import absolute_import
 
 from celery_proj.celery import app
-
 from sharefun import create_app
 from sharefun.models import db, Recommendation, User, Category, Comment, Work
 from sharefun.script.spider.crawlDoubanWorkInfo import main
@@ -98,13 +97,15 @@ collection_url = "https://api.douban.com/v2/book/%s/collection"
 
 
 @app.task
-def sync_with_douban():
+def sync_with_douban(access_token=None):
     """在豆瓣用户初始激活账户一小时之类抓取其评论数据"""
+    headers = {
+        "Authorization": "Bearer %s" % access_token}
     flask_app = create_app()
     with flask_app.app_context():
         one_hour_ago = datetime.utcnow() + timedelta(hours=-1)
         print one_hour_ago
-        for user in User.query.filter_by(is_activated=1).filter(User.created > one_hour_ago):
+        for user in User.query.filter_by(is_activated=1):
             print user.douban_abbr
             collections_info = requests.get(
                 collections_url % user.douban_abbr).json()
@@ -134,49 +135,58 @@ def sync_with_douban():
                             if collection['status'] == 'read' and collection['comment']:
                                 # comment = Comment.query.filter_by(
                                 #     content=collection['comment']).first()
-                                comment = Comment.query.filter_by(user_id=user.id).filter_by(work_id=work.id).first()
+                                comment = Comment.query.filter_by(
+                                    user_id=user.id).filter_by(work_id=work.id).first()
                                 # 该评论没有被抓取，则新增评论添加到系统
                                 if not comment:
                                     # 豆瓣上评论时间为utc+8，变为utc+0存到服务器
                                     comment = Comment(
                                         content=collection['comment'], user_id=user.id,  work_id=work.id, created=datetime.strptime(collection['updated'], "%Y-%m-%d %H:%M:%S") + timedelta(hours=-8))
-                                else:  #若系统中已经添加了该评论，则直接修改内容
+                                else:  # 若系统中已经添加了该评论，则直接修改内容
                                     comment.content = collection['comment']
                                 print comment.content
                                 db.session.add(comment)
                                 db.session.commit()
 
-                    for collection in collections:
-                        # push comments
-                        # 将系统中已上架作品的评论同步到豆瓣
+                    print comments
+                    print config.DOUBAN_CLIENT_ID
+                    print access_token
+                    print headers
+
+                    if access_token:
+                        for collection in collections:
+                            # push comments
+                            # 将系统中已上架作品的评论同步到豆瓣
+                            # 需要权限，目前会失败
+                            for comment in comments:
+                                if comment.user_id == user.id and collection['book']['alt'] == comment.work.url:
+                                    data = {
+                                        'status': collection['status'],
+                                        'comment': comment.content,
+                                        'scope': 'douban_basic_common'
+                                    }
+                                    res = requests.put(
+                                        collection_url % collection['book']['id'], data, headers=headers)
+                                    print res.status_code
+                                    print res.content
+                                    print comment
+                                    break
+
+                        # push recommendations
+                        # 在系统中推荐，将推荐作品同步到豆瓣收藏
                         # 需要权限，目前会失败
-                        for comment in comments:
-                            if comment.user_id == user.id and collection['book']['alt'] == comment.work.url:
+                        print collection_ids
+                        for work_id, work in work_dict.iteritems():
+                            if not work_id in collection_ids:
                                 data = {
-                                    'status': collection['status'],
-                                    'comment': comment.content
+                                    'status': 'read',
+                                    'comment': work.recommendation.recomm_reason,
+                                    'scope': 'douban_basic_common'
                                 }
-                                res = requests.put(
-                                    collection_url % collection['book']['id'], data)
+                                res = requests.post(
+                                    collection_url % work_id, data,  headers=headers)
                                 print res.status_code
                                 print res.content
-                                print comment
-                                break
-
-                    # push recommendations
-                    # 在系统中推荐，将推荐作品同步到豆瓣收藏
-                    # 需要权限，目前会失败
-                    print collection_ids
-                    for work_id, work in work_dict.iteritems():
-                        if not work_id in collection_ids:
-                            data = {
-                                'status': 'read',
-                                'comment': work.recommendation.recomm_reason
-                            }
-                            res = requests.post(
-                                collection_url % work_id, data)
-                            print res.status_code
-                            print res.content
 
 
 @app.task

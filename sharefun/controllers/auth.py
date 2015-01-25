@@ -113,6 +113,12 @@ def douban_signin():
         flash('欢迎使用豆瓣账户登陆ShareFun')
         signin_user(user, True)
         redirect_url = url_for('site.index')
+
+        access_token = res['access_token']
+        # 用户此次登录同步上次登陆后添加的评论和推荐到豆瓣
+        from celery_proj.tasks import sync_with_douban
+        sync_with_douban.delay(access_token)
+
         return redirect(redirect_url)
     # 通过加密的session传递user_id数据，防止恶意注册
     session['signup_user_id'] = user_id

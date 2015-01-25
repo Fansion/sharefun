@@ -128,10 +128,11 @@ def get_current_user():
     """获取当前user，同时进行session有效性的检测
        放在utils.py会造成环路引用
     """
-    # 豆瓣登陆则不验证邮箱
-    if 'signin_method' in session:
+    # 对应utils.py中signin_user方法
+    # 豆瓣登陆则验证邮箱, 非豆瓣登陆不验证邮箱直接返回空值退出
+    if 'signin_method' not in session:
         return None
-    if not 'user_id' in session:
+    if 'user_id' not in session:
         return None
     # else:
     #     for k,v in session.iteritems():

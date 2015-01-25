@@ -23,7 +23,7 @@ def signup_mail(user):
 def signin_user(user, permenent):
     """Sign in user"""
     # session.permanent = permenent
-    session['signin_method'] = 'by_douban'      # 如果豆瓣登陆则不要求验证邮箱
+    session['signin_method'] = 'by_douban'      # 如果豆瓣登陆则要求验证邮箱
     session['user_id'] = user.id                # 此处是user_id而不是douban_id
 
 

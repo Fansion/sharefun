@@ -98,7 +98,10 @@ collection_url = "https://api.douban.com/v2/book/%s/collection"
 
 @app.task
 def sync_with_douban(access_token=None):
-    """在豆瓣用户初始激活账户一小时之类抓取其评论数据"""
+    """在豆瓣用户初始激活账户一小时之类抓取其评论数据
+    定时任务时access_token为空，push相关的操作都没有access_token
+    当授权登陆时会产生合法的access_token，调用同步任务执行相关的push操作
+    """
     headers = {
         "Authorization": "Bearer %s" % access_token}
     flask_app = create_app()
@@ -107,6 +110,7 @@ def sync_with_douban(access_token=None):
         print one_hour_ago
         for user in User.query.filter_by(is_activated=1):
             print user.douban_abbr
+            #　不需要豆瓣读书相关的权限
             collections_info = requests.get(
                 collections_url % user.douban_abbr).json()
             if collections_info:

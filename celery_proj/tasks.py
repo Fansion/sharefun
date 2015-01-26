@@ -98,17 +98,20 @@ collection_url = "https://api.douban.com/v2/book/%s/collection"
 
 @app.task
 def sync_with_douban():
-    """在豆瓣用户初始激活账户一小时之类抓取其评论数据
-    定时任务时access_token为空，push相关的操作都没有access_token
-    当授权登陆时会产生合法的access_token，调用同步任务执行相关的push操作
+    """三件事：一从豆瓣上同步评论到本地；二将本地作品的评论同步到豆瓣；三：将本地推荐的作品同步到豆瓣
+    一不需要access_token，二三需要
+    策略：豆瓣本次登陆将access_token存到user的access_token字段中
+    access_token有效期3920s > 1h，定时任务1h1次，在豆瓣用户登陆账户一小时之类利用有效期内的access_token抓取其评论数据
+    分析：豆瓣用户每次登陆之后在本站的评论或者推荐信息　与　在豆瓣上的评论信息，在一小时之类必定会与豆瓣进行有效同步
     """
 
     flask_app = create_app()
     with flask_app.app_context():
         one_hour_ago = datetime.utcnow() + timedelta(hours=-1)
-        print one_hour_ago
+        # print one_hour_ago
         for user in User.query.filter_by(is_activated=1):
-            print user.douban_abbr
+            # print user.douban_abbr
+            # xiaoaifansion
             #　不需要豆瓣读书相关的权限
             collections_info = requests.get(
                 collections_url % user.douban_abbr).json()
@@ -119,7 +122,8 @@ def sync_with_douban():
                 for recommendation in recommendations:
                     work_dict[recommendation.work.url.strip(
                         '/').split('/')[-1]] = recommendation.work
-                print work_dict
+                # print work_dict
+                # {u'1052241': Work 设计模式}
 
                 collection_ids = []
                 collections = collections_info["collections"]
@@ -147,15 +151,20 @@ def sync_with_douban():
                                         content=collection['comment'], user_id=user.id,  work_id=work.id, created=datetime.strptime(collection['updated'], "%Y-%m-%d %H:%M:%S") + timedelta(hours=-8))
                                 else:  # 若系统中已经添加了该评论，则直接修改内容
                                     comment.content = collection['comment']
-                                print comment.content
+                                # print comment.content
+                                # 测试
                                 db.session.add(comment)
                                 db.session.commit()
                     headers = {
                         "Authorization": "Bearer %s" % user.access_token}
-                    print comments
-                    print config.DOUBAN_CLIENT_ID
-                    print access_token
-                    print headers
+                    # print comments
+                    # [Comment 20, Comment 21]
+                    # print config.DOUBAN_CLIENT_ID
+                    # 088cbee5d793b72a19a63cb186bb257e
+                    # print access_token
+                    # 4b02cc1fdfae6fa9e108645f9f0b4efb
+                    # print headers
+                    # {'Authorization': u'Bearer 4b02cc1fdfae6fa9e108645f9f0b4efb'}
 
                     if access_token:
                         for collection in collections:
@@ -172,16 +181,18 @@ def sync_with_douban():
                                     }
                                     res = requests.put(
                                         collection_url % collection['book']['id'], data, headers=headers)
-                                    print res.status_code
-                                    print res.content
-                                    print comment
+                                    # print res.status_code
+                                    # 202
+                                    # print res.content
+                                    # print comment
                                     break
 
                         # push recommendations
                         # 在系统中推荐，将推荐作品同步到豆瓣收藏
                         # 需要权限，目前会失败
                         # push成功20150126
-                        print collection_ids
+                        # print collection_ids
+ # [u'1052241', u'1858513', u'6709783', u'2567698', u'1230413', u'1788421', u'24738302', u'6021440', u'1084336', u'3117898', u'3688489', u'3323633', u'1894695', u'1786387', u'2209702', u'6709809', u'11229716', u'25814739', u'25863621', u'25900403']
                         for work_id, work in work_dict.iteritems():
                             if not work_id in collection_ids:
                                 data = {
@@ -191,8 +202,9 @@ def sync_with_douban():
                                 }
                                 res = requests.post(
                                     collection_url % work_id, data,  headers=headers)
-                                print res.status_code
-                                print res.content
+                                # print res.status_code
+                                # print res.content
+
 
 
 @app.task

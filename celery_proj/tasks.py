@@ -155,8 +155,9 @@ def sync_with_douban():
                                 # 测试
                                 db.session.add(comment)
                                 db.session.commit()
+                    access_token = user.access_token
                     headers = {
-                        "Authorization": "Bearer %s" % user.access_token}
+                        "Authorization": "Bearer %s" % access_token}
                     # print comments
                     # [Comment 20, Comment 21]
                     # print config.DOUBAN_CLIENT_ID

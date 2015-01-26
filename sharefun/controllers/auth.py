@@ -119,7 +119,7 @@ def douban_signin():
         user.access_token = res['access_token']
         db.session.add(user)
         db.session.commit()
-        # 用户此次登录同步上次登陆后添加的评论和推荐到豆瓣
+        # 用户此次登录同步豆瓣上之前的附注到本站
         from celery_proj.tasks import sync_with_douban
         sync_with_douban.delay()
 

@@ -97,13 +97,12 @@ collection_url = "https://api.douban.com/v2/book/%s/collection"
 
 
 @app.task
-def sync_with_douban(access_token=None):
+def sync_with_douban():
     """在豆瓣用户初始激活账户一小时之类抓取其评论数据
     定时任务时access_token为空，push相关的操作都没有access_token
     当授权登陆时会产生合法的access_token，调用同步任务执行相关的push操作
     """
-    headers = {
-        "Authorization": "Bearer %s" % access_token}
+
     flask_app = create_app()
     with flask_app.app_context():
         one_hour_ago = datetime.utcnow() + timedelta(hours=-1)
@@ -151,7 +150,8 @@ def sync_with_douban(access_token=None):
                                 print comment.content
                                 db.session.add(comment)
                                 db.session.commit()
-
+                    headers = {
+                        "Authorization": "Bearer %s" % user.access_token}
                     print comments
                     print config.DOUBAN_CLIENT_ID
                     print access_token
@@ -162,6 +162,7 @@ def sync_with_douban(access_token=None):
                             # push comments
                             # 将系统中已上架作品的评论同步到豆瓣
                             # 需要权限，目前会失败
+                            # push成功20150126
                             for comment in comments:
                                 if comment.user_id == user.id and collection['book']['alt'] == comment.work.url:
                                     data = {
@@ -179,6 +180,7 @@ def sync_with_douban(access_token=None):
                         # push recommendations
                         # 在系统中推荐，将推荐作品同步到豆瓣收藏
                         # 需要权限，目前会失败
+                        # push成功20150126
                         print collection_ids
                         for work_id, work in work_dict.iteritems():
                             if not work_id in collection_ids:

@@ -76,6 +76,7 @@ def douban_signin():
     """
     # get current authed user id
     code = request.args.get('code')
+    print code
     if not code:
         return redirect(url_for('site.index'))
     url = "https://www.douban.com/service/auth2/token"
@@ -88,6 +89,7 @@ def douban_signin():
         'code': code
     }
     res = requests.post(url, data=data).json()
+    print res
     # 返回access_token类似：
     # {
     #   "access_token":"a14afef0f66fcffce3e0fcd2e34f6ff4",
@@ -114,10 +116,12 @@ def douban_signin():
         signin_user(user, True)
         redirect_url = url_for('site.index')
 
-        access_token = res['access_token']
+        user.access_token = res['access_token']
+        db.session.add(user)
+        db.session.commit()
         # 用户此次登录同步上次登陆后添加的评论和推荐到豆瓣
         from celery_proj.tasks import sync_with_douban
-        sync_with_douban.delay(access_token)
+        sync_with_douban.delay()
 
         return redirect(redirect_url)
     # 通过加密的session传递user_id数据，防止恶意注册

@@ -23,6 +23,10 @@ from bs4 import BeautifulSoup
 from spider_config import *
 from python_mysql import *
 
+# tasks.py", line 7导入本文件中的main方法
+# 此时/var/log/sharefun/spider/log.out如果没有写权限会报错
+# 豆瓣登录时多次出现/var/log/sharefun/spider/log.out错误
+# 增加写权限后一切正常，20150126
 LOG_PATH = '/var/log/sharefun/spider'
 logging.basicConfig(filename=os.path.join(LOG_PATH, 'log.out'), filemode='a',
                     format='%(asctime)s,%(name)s %(levelname)5s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)

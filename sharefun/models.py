@@ -198,6 +198,7 @@ class User(UserMixin, db.Model):
     douban_abbr = db.Column(db.String(50))                       #douban uid
     is_activated = db.Column(db.Boolean, default=False)          #默认不激活，不影响非豆瓣用户
     is_banned = db.Column(db.Boolean, default=False)             #是否禁用
+    access_token = db.Column(db.String(50))                  　　　#本次成功登陆的access_token
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
